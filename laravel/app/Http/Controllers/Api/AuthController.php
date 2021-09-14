@@ -53,8 +53,6 @@ class AuthController extends Controller
 
     public function signup(SignupRequest $request)
     {
-//        $validated = $request->validated();
-//        $validated['password'] = Hash::make($request->password);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
