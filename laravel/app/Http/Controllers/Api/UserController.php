@@ -28,23 +28,36 @@ class UserController extends Controller
      * )
      */
 
-    public function updateProfile(UpdateUserProfileRequest $request) {
+    public function updateProfile(UpdateUserProfileRequest $request)
+    {
         $user = Auth::user();
         $user->update($request->toArray());
-        return $this->successResponse(compact('user'));
+        return $this->successResponse(new UserProfileResource($user));
     }
 
     /**
      * @OA\Get(
      *     path="/api/user/profile",
-     *     description="Get user profile",
+     *     description="Get user profile. !!!ATTENTION!!! Response may has different structure (see in schemas: project.owner.profile.response, investor.profile.response)",
      *     tags={"User"},
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.auth.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.profile.response")),
      *     security={{"Authorization": {}}}
      * )
      */
-    public function getProfile() {
+
+    /**
+     * @OA\Schema(schema="user.profile.response",
+     *   @OA\Property(property="success",type="boolean",example=true),
+     *   @OA\Property(property="errors_message",type="string",example=null),
+     *   @OA\Property(property="data",type="object",oneOf={
+     *      @OA\Schema(ref="#/components/schemas/project.owner.profile.response"),
+     *      @OA\Schema(ref="#/components/schemas/investor.profile.response")},
+     *   ),
+     * )
+     */
+    public function getProfile()
+    {
         $user = Auth::user();
         return $this->successResponse(new UserProfileResource($user));
     }

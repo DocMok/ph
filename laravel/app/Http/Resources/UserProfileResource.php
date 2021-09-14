@@ -7,10 +7,32 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class UserProfileResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @OA\Schema(schema="project.owner.profile.response",
+     *     @OA\Property(property="id", type="integer",example=1),
+     *     @OA\Property(property="user_type", type="integer",example=0),
+     *     @OA\Property(property="name", type="string",example="John Dou"),
+     *     @OA\Property(property="phone", type="string",example="380501234578"),
+     *     @OA\Property(property="email", type="string",example="mail@test.com"),
+     *     @OA\Property(property="job", type="string",example="Backend developer"),
+     *     @OA\Property(property="projects", type="array",
+     *          @OA\Items(
+     *              @OA\Property(property="name", type="string", example="Project1"),
+     *          ),
+     *     ),
+     * )
+     */
+
+    /**
+     * @OA\Schema(schema="investor.profile.response",
+     *     @OA\Property(property="id", type="integer",example=1),
+     *     @OA\Property(property="user_type", type="integer",example=0),
+     *     @OA\Property(property="name", type="string",example="John Dou"),
+     *     @OA\Property(property="phone", type="string",example="380501234578"),
+     *     @OA\Property(property="email", type="string",example="mail@test.com"),
+     *     @OA\Property(property="job", type="string",example="Backend developer"),
+     *     @OA\Property(property="amount", type="integer",example=20000),
+     *     @OA\Property(property="currency", type="string",example="usd"),
+     * )
      */
     public function toArray($request)
     {
@@ -21,13 +43,10 @@ class UserProfileResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'job' => $this->job,
+            'amount' => $this->when($this->user_type == 1, $this->typeable->amount),
+            'currency' => $this->when($this->user_type == 1, $this->typeable->currency),
+            'projects' => $this->when($this->user_type == 0, $this->typeable->projects),
         ];
-        if ($this->user_type == 0) {
-            $result['projects'] = $this->typeable->projects;
-        }
-        if ($this->user_type == 1) {
-            $result['amount'] = $this->typeable->amount;
-        }
         return $result;
     }
 }
