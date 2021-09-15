@@ -9,7 +9,7 @@ class UserProfileResource extends JsonResource
     /**
      * @OA\Schema(schema="project.owner.profile.response",
      *     @OA\Property(property="id", type="integer",example=1),
-     *     @OA\Property(property="user_type", type="integer",example=0),
+     *     @OA\Property(property="user_type", type="string",example="ProjectOwner"),
      *     @OA\Property(property="name", type="string",example="John Dou"),
      *     @OA\Property(property="phone", type="string",example="380501234578"),
      *     @OA\Property(property="email", type="string",example="mail@test.com"),
@@ -25,7 +25,7 @@ class UserProfileResource extends JsonResource
     /**
      * @OA\Schema(schema="investor.profile.response",
      *     @OA\Property(property="id", type="integer",example=3),
-     *     @OA\Property(property="user_type", type="integer",example=1),
+     *     @OA\Property(property="user_type", type="string",example="Investor"),
      *     @OA\Property(property="name", type="string",example="John Dou"),
      *     @OA\Property(property="phone", type="string",example="380501234578"),
      *     @OA\Property(property="email", type="string",example="mail@test.com"),
@@ -45,7 +45,7 @@ class UserProfileResource extends JsonResource
             'job' => $this->job,
             'amount' => $this->when($this->user_type == 1, $this->typeable->amount),
             'currency' => $this->when($this->user_type == 1, $this->typeable->currency),
-            'projects' => $this->when($this->user_type == 0, $this->typeable->projects),
+            'projects' => $this->when($this->user_type == 0, ProjectResource::collection($this->typeable->projects)),
         ];
         return $result;
     }

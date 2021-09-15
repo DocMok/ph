@@ -11,11 +11,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    const USER_TYPES = [
-        'ProjectOwner' => 0,
-        'Investor' => 1,
-    ];
-
+    const PROJECT_OWNER = 'ProjectOwner';
+    const INVESTOR = 'Investor';
     /**
      * The attributes that are mass assignable.
      *
@@ -54,7 +51,6 @@ class User extends Authenticatable
     }
 
     public function getUserTypeAttribute() {
-        $className = class_basename($this->typeable);
-        return self::USER_TYPES[$className] ?? null;
+        return class_basename($this->typeable);
     }
 }

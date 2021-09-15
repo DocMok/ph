@@ -31,7 +31,7 @@ class SignupRequest extends FormRequest
             'job' => 'required|string',
             'phone' => 'required|numeric|unique:users,phone',
             'password' => 'required|string',
-            'user_type' => 'required|numeric|min:0|max:1',
+            'user_type' => 'required|string|in:Investor,ProjectOwner',
         ];
     }
 }
