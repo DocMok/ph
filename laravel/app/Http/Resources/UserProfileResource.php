@@ -33,6 +33,7 @@ class UserProfileResource extends JsonResource
      *     @OA\Property(property="job", type="string",example="Backend developer"),
      *     @OA\Property(property="amount", type="integer",example=20000),
      *     @OA\Property(property="currency", type="string",example="usd"),
+     *     @OA\Property(property="category_ids", type="array",@OA\Items(type="integer")),
      * )
      */
     public function toArray($request)
@@ -46,9 +47,12 @@ class UserProfileResource extends JsonResource
             'job' => $this->job,
             'amount' => $this->when($this->user_type == User::INVESTOR, $this->typeable->amount),
             'currency' => $this->when($this->user_type == User::INVESTOR, $this->typeable->currency),
+            'category_ids' => $this->when(
+                $this->user_type == User::INVESTOR,
+                $this->typeable->categories ? $this->typeable->categories->keyBy('id')->keys()->toArray(): []),
             'projects' => $this->when(
                 $this->user_type == User::PROJECT_OWNER,
-                $this->typeable->projects ? ProjectResource::collection($this->typeable->projects) : null
+                $this->typeable->projects ? ProjectResource::collection($this->typeable->projects) : []
             ),
         ];
 
