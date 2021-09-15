@@ -24,8 +24,8 @@ class UserProfileResource extends JsonResource
 
     /**
      * @OA\Schema(schema="investor.profile.response",
-     *     @OA\Property(property="id", type="integer",example=1),
-     *     @OA\Property(property="user_type", type="integer",example=0),
+     *     @OA\Property(property="id", type="integer",example=3),
+     *     @OA\Property(property="user_type", type="integer",example=1),
      *     @OA\Property(property="name", type="string",example="John Dou"),
      *     @OA\Property(property="phone", type="string",example="380501234578"),
      *     @OA\Property(property="email", type="string",example="mail@test.com"),
