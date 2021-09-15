@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserProfileResource extends JsonResource
@@ -43,10 +44,14 @@ class UserProfileResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'job' => $this->job,
-            'amount' => $this->when($this->user_type == 1, $this->typeable->amount),
-            'currency' => $this->when($this->user_type == 1, $this->typeable->currency),
-            'projects' => $this->when($this->user_type == 0, ProjectResource::collection($this->typeable->projects)),
+            'amount' => $this->when($this->user_type == User::INVESTOR, $this->typeable->amount),
+            'currency' => $this->when($this->user_type == User::INVESTOR, $this->typeable->currency),
+            'projects' => $this->when(
+                $this->user_type == User::PROJECT_OWNER,
+                $this->typeable->projects ? ProjectResource::collection($this->typeable->projects) : null
+            ),
         ];
+
         return $result;
     }
 }
