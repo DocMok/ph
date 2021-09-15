@@ -23,11 +23,15 @@ class AuthController extends Controller
      *     description="Signup",
      *     tags={"Auth"},
      *     @OA\Parameter(name="name",description="User name",required=true,in="query",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="email",description="Unique user email",required=true,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="email",description="Unique user email",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="job",description="User's job description",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="phone",description="User's phone number",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="password",description="User's password",required=true,in="query",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="user_type",description="values: ProjectOwner, Investor",required=true,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="user_type",description="Values: ProjectOwner, Investor",required=true,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="category_ids",description="Array of category ids. Required when user_type=Investor",required=false,in="query",
+     *          @OA\Schema(type="array", @OA\Items(type="integer"))),
+     *     @OA\Parameter(name="amount",description="Amount. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="currency",description="Currency. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.auth.response"))
      * )
@@ -62,7 +66,11 @@ class AuthController extends Controller
             $userType = ProjectOwner::create([]);
         }
         if ($request->user_type == User::INVESTOR) {
-            $userType = Investor::create([]);
+            $userType = Investor::create([
+                'amount'=> $request->amount,
+                'currency'=>$request->currency
+            ]);
+            $userType->categories()->sync($request->category_ids);
         }
 
         $userType->user()->save($user);

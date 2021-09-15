@@ -9,7 +9,13 @@ class Investor extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function user() {
         return $this->morphOne(User::class, 'typeable');
+    }
+
+    public function categories() {
+        return $this->belongsToMany(Category::class);
     }
 }
