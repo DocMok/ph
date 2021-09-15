@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,3 +14,5 @@ Route::prefix('user')->group(function () {
         Route::get('profile', [UserProfileController::class, 'getProfile']);
     });
 });
+
+Route::get('projects/categories', [CategoryController::class, 'getCategories']);
