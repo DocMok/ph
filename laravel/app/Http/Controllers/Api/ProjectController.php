@@ -70,8 +70,8 @@ class ProjectController extends Controller
 
 
     /**
-     * @OA\Put(
-     *     path="/api/projects",
+     * @OA\Post(
+     *     path="/api/projects/update",
      *     description="Update project",
      *     tags={"Projects"},
      *     @OA\RequestBody(
@@ -95,9 +95,6 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request)
     {
-        //TODO
-        // fix logo upload
-
         $user = Auth::user();
         if (!$user) {
             return $this->errorResponse('User is not authorized');

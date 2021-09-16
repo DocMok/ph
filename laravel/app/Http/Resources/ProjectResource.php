@@ -21,7 +21,7 @@ class ProjectResource extends JsonResource
             'currency' => $this->currency,
             'amount_available' => $this->amount_available,
             'amount_remaining' => $this->amount_remaining,
-            'category' => 'coming soon...',
+            'category' => $this->category_id,
             'logo' => $this->logo ?? null,
         ];
     }

@@ -20,7 +20,7 @@ Route::prefix('projects')->group(function () {
     Route::get('categories', [CategoryController::class, 'getCategories']);
     Route::middleware('auth:api')->group(function () {
         Route::post('/', [ProjectController::class, 'store']);
-        Route::put('/', [ProjectController::class, 'update']);
+        Route::post('/update', [ProjectController::class, 'update']);
     });
 });
 

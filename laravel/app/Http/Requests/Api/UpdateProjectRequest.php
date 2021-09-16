@@ -33,7 +33,7 @@ class UpdateProjectRequest extends FormRequest
             'currency' => 'string',
             'amount_available' => 'integer',
             'amount_remaining' => 'integer',
-            'logo' => 'string',
+            'logo' => 'mimes:jpg,png|max:1024',
         ];
     }
 }
