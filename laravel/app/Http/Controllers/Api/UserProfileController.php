@@ -46,14 +46,14 @@ class UserProfileController extends Controller
 
 
     /**
-     * @OA\Put(
+     * @OA\Post (
      *     path="/api/user/profile",
      *     description="Update user profile",
      *     tags={"User"},
      *     @OA\RequestBody(
      *         @OA\MediaType(mediaType="multipart/form-data",
      *              @OA\Schema(
-     *                   @OA\Property(description="Item image",property="photo",type="string", format="binary")
+     *                   @OA\Property(description="User photo",property="photo",type="string", format="binary")
      *              )
      *         )
      *     ),
