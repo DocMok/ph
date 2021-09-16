@@ -79,7 +79,7 @@ class UserProfileController extends Controller
 
         if ($request->file('photo')) {
             if ($user->photo) {
-                Storage::delete($user->photo);
+                Storage::disk('public')->delete($user->photo);
             }
             $photoPath = $request->file('photo')->store("user/photos/{$user->id}", ['disk' => 'public']);
             $user->photo = $photoPath;
