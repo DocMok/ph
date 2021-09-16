@@ -78,11 +78,10 @@ class UserProfileController extends Controller
         }
 
         if ($request->file()) {
-            Storage::put('file.jpg', $request->photo);
-            $photoPath = $request->file('photo')->store("user/photos/{$user->id}", ['disk' => 'public']);
             if ($user->photo) {
                 Storage::delete($user->photo);
             }
+            $photoPath = $request->file('photo')->store("user/photos/{$user->id}", ['disk' => 'public']);
             $user->photo = $photoPath;
             $user->save();
         }
