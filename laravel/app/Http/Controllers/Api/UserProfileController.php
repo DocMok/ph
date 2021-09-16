@@ -77,7 +77,7 @@ class UserProfileController extends Controller
             return $this->errorResponse('User is not authorized');
         }
 
-        if ($request->file()) {
+        if ($request->file('photo')) {
             if ($user->photo) {
                 Storage::delete($user->photo);
             }
@@ -86,7 +86,7 @@ class UserProfileController extends Controller
             $user->save();
         }
 
-        $user->update($request->except('amount', 'currency', 'category_ids'));
+        $user->update($request->except('amount', 'currency', 'category_ids', 'photo'));
         if ($user->user_type == User::INVESTOR) {
             $user->typeable->update($request->only('amount', 'currency'));
             $user->typeable->categories()->sync($request->category_ids);

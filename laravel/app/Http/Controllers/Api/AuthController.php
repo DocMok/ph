@@ -66,7 +66,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        if ($request->file()) {
+        if ($request->file('photo')) {
             $photoPath = $request->file('photo')->store("user/photos/{$user->id}", ['disk' => 'public']);
             $user->photo = $photoPath;
             $user->save();
