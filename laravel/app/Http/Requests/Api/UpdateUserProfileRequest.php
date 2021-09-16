@@ -36,7 +36,7 @@ class UpdateUserProfileRequest extends FormRequest
             'amount' => 'integer',
             'category_ids' => 'array',
             'category_ids.*' => 'integer',
-            'photo' => 'string',
+            'photo' => 'mimes:jpg,png|max:1024',
         ];
     }
 }
