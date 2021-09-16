@@ -12,6 +12,7 @@ use App\Models\ProjectOwner;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -22,6 +23,13 @@ class AuthController extends Controller
      *     path="/api/user/signup",
      *     description="Signup",
      *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                   @OA\Property(description="Item image",property="photo",type="string", format="binary"),
+     *              )
+     *         )
+     *     ),
      *     @OA\Parameter(name="name",description="User name",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="email",description="Unique user email",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="job",description="User's job description",required=true,in="query",@OA\Schema(type="string")),
@@ -56,7 +64,14 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'job' => $request->job,
             'password' => Hash::make($request->password),
+//            'photo' => $photoPath ?? null,
         ]);
+
+        if ($request->file()) {
+            $photoPath = $request->file('photo')->store("user/photos/{$user->id}", ['disk' => 'public']);
+            $user->photo = $photoPath;
+            $user->save();
+        }
 
         if (!$user) {
             return $this->errorResponse('User was not created');
@@ -136,7 +151,7 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         if (!$user) {
-            return $this->errorResponse(['data' => 'User is not authorized']);
+            return $this->errorResponse('User is not authorized');
         }
         $user->token()->revoke();
         return $this->successResponse('You\'re logged out successfully');
