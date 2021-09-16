@@ -33,7 +33,7 @@ class ProjectStoreRequest extends FormRequest
             'currency' => 'required|string',
             'amount_available' => 'required|integer',
             'amount_remaining' => 'required|integer',
-            'logo' => 'string',
+            'logo' => 'mimes:jpg,png|max:1024',
         ];
     }
 }
