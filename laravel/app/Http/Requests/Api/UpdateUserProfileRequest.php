@@ -3,10 +3,8 @@
 namespace App\Http\Requests\Api;
 
 use App\Http\Traits\ApiValidationError;
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class UpdateUserProfileRequest extends FormRequest
 {
@@ -38,6 +36,7 @@ class UpdateUserProfileRequest extends FormRequest
             'amount' => 'integer',
             'category_ids' => 'array',
             'category_ids.*' => 'integer',
+            'photo' => 'string',
         ];
     }
 }
