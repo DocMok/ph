@@ -36,7 +36,7 @@ class SignupRequest extends FormRequest
             'category_ids.*' => 'integer',
             'amount' => 'required_if:user_type,Investor|integer|min:0',
             'currency' => 'required_if:user_type,Investor|string',
-            'photo' => 'mimes:jpg,png|max:1024',
+            'photo' => 'string',
         ];
     }
 }

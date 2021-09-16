@@ -11,6 +11,7 @@ use App\Models\Investor;
 use App\Models\ProjectOwner;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,24 +19,20 @@ class AuthController extends Controller
 {
     use ApiResponsable;
 
+    const PHOTO_TYPES = ['jpg', 'jpeg', 'png', 'heic'];
+
     /**
      * @OA\Post(
      *     path="/api/user/signup",
      *     description="Signup",
      *     tags={"Auth"},
-     *     @OA\RequestBody(
-     *         @OA\MediaType(mediaType="multipart/form-data",
-     *              @OA\Schema(
-     *                   @OA\Property(description="Item image",property="photo",type="string", format="binary"),
-     *              )
-     *         )
-     *     ),
      *     @OA\Parameter(name="name",description="User name",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="email",description="Unique user email",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="job",description="User's job description",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="phone",description="User's phone number",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="password",description="User's password",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="user_type",description="Values: ProjectOwner, Investor",required=true,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="photo",description="base64 photo encoded",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="category_ids",description="Array of category ids. Required when user_type=Investor",required=false,in="query",
      *          @OA\Schema(type="array", @OA\Items(type="integer"))),
      *     @OA\Parameter(name="amount",description="Amount. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="integer")),
@@ -64,13 +61,21 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'job' => $request->job,
             'password' => Hash::make($request->password),
-//            'photo' => $photoPath ?? null,
         ]);
 
-        if ($request->file()) {
-            $photoPath = $request->file('photo')->store("user/photos/{$user->id}", ['disk' => 'public']);
-            $user->photo = $photoPath;
-            $user->save();
+        if ($request->photo) {
+            $decodedPhoto = base64_decode($request->photo);
+            $photoType = finfo_buffer(finfo_open(), $decodedPhoto, FILEINFO_MIME_TYPE);
+            $extension = explode('/', $photoType)[1];
+
+            if (in_array($extension, self::PHOTO_TYPES)) {
+                $photoPath = "user/photos/{$user->id}/" . uniqid() . '.' . $extension;
+                Storage::disk('public')->put($photoPath, $decodedPhoto);
+                $user->photo = $photoPath;
+                $user->save();
+            } else {
+                return $extension;
+            }
         }
 
         if (!$user) {
@@ -82,8 +87,8 @@ class AuthController extends Controller
         }
         if ($request->user_type == User::INVESTOR) {
             $userType = Investor::create([
-                'amount'=> $request->amount,
-                'currency'=>$request->currency
+                'amount' => $request->amount,
+                'currency' => $request->currency
             ]);
             $userType->categories()->sync($request->category_ids);
         }
