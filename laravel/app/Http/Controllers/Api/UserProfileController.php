@@ -53,7 +53,7 @@ class UserProfileController extends Controller
      *     @OA\RequestBody(
      *         @OA\MediaType(mediaType="multipart/form-data",
      *              @OA\Schema(
-     *                   @OA\Property(description="User photo",property="photo",type="string", format="binary")
+     *                   @OA\Property(description="User photo",property="photo",type="file", format="binary")
      *              )
      *         )
      *     ),
