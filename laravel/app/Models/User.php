@@ -46,11 +46,18 @@ class User extends Authenticatable
 
     protected $appends = ['user_type'];
 
-    public function typeable() {
+    public function typeable()
+    {
         return $this->morphTo();
     }
 
-    public function getUserTypeAttribute() {
+    public function getUserTypeAttribute()
+    {
         return class_basename($this->typeable);
+    }
+
+    public function likedProjects()
+    {
+        return $this->belongsToMany(Project::class, 'project_user_likes');
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GetProjectsRequest;
 use App\Http\Requests\Api\ProjectStoreRequest;
 use App\Http\Requests\Api\UpdateProjectRequest;
+use App\Http\Requests\ProjectLikeRequest;
 use App\Http\Resources\ProjectResource;
 use App\Http\Traits\ApiResponsable;
 use App\Models\Project;
@@ -199,6 +200,28 @@ class ProjectController extends Controller
             $project->save();
         }
 
+        return $this->successResponse('ok');
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/project/like-toggle",
+     *     description="Like project",
+     *     tags={"Projects"},
+     *     @OA\Parameter(name="id",description="Project id",required=true,in="query",@OA\Schema(type="integer")),
+     *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/store.update.project.response")),
+     *     security={{"Authorization": {}}}
+     * )
+     */
+    public function likeToggle(ProjectLikeRequest $request) {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User is not authorized');
+        }
+
+        $project = Project::find($request->id);
+        $project->likes()->toggle($user->id);
 
         return $this->successResponse('ok');
     }

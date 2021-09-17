@@ -11,11 +11,18 @@ class Project extends Model
 
     protected $guarded = [];
 
-    public function projectOwner() {
+    public function projectOwner()
+    {
         return $this->belongsTo(ProjectOwner::class);
     }
 
-    public function category() {
+    public function category()
+    {
         return $this->belongsTo(Category::class);
+    }
+
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'project_user_likes');
     }
 }
