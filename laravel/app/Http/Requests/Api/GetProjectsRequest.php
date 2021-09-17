@@ -27,6 +27,8 @@ class GetProjectsRequest extends FormRequest
     public function rules()
     {
         return [
+            'limit' => 'integer|min:1',
+            'page' => 'integer|min:1',
             'category_ids' => 'array',
             'category_ids.*' => 'integer',
             'currency' => 'string',

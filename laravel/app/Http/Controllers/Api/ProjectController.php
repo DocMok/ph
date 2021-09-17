@@ -17,6 +17,8 @@ class ProjectController extends Controller
 {
     use ApiResponsable;
 
+    const MAX_ITEMS_PER_PAGE = 20;
+
     //TODO
     // swagger responses
 
@@ -29,9 +31,24 @@ class ProjectController extends Controller
      *     @OA\Parameter(name="currency",description="Currency",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="min",description="Min amount to invest",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Parameter(name="max",description="Max amount to invest",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="limit",description="Projects per page",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page",description="Page number",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.profile.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/projects.list.response")),
      *     security={{"Authorization": {}}}
+     * )
+     */
+
+    /**
+     * @OA\Schema(schema="projects.list.response",
+     *   @OA\Property(property="success",type="boolean",example=true),
+     *   @OA\Property(property="errors_message",type="string",example=null),
+     *   @OA\Property(property="data",type="object",
+     *      @OA\Property(property="pages_total", type="integer", example=3),
+     *      @OA\Property(property="projects", type="array",
+     *          @OA\Items(ref="#/components/schemas/project.response"),
+     *      ),
+     *   ),
      * )
      */
     public function index(GetProjectsRequest $request)
@@ -41,7 +58,11 @@ class ProjectController extends Controller
             return $this->errorResponse('User is not authorized');
         }
 
-        $projects = Project::when($request->category_ids, function ($query) use ($request) {
+        $limit = $request->limit ?? self::MAX_ITEMS_PER_PAGE;
+        $page = $request->page ?? 1;
+        $skip = ($page - 1) * $limit;
+
+        $projectsQuery = Project::when($request->category_ids, function ($query) use ($request) {
             $query->whereIn('category_id', $request->category_ids);
         })
             ->when(!$request->category_ids && $user->user_type == User::INVESTOR, function ($query) use ($user) {
@@ -55,9 +76,17 @@ class ProjectController extends Controller
             })
             ->when($request->max, function ($query) use ($request) {
                 $query->where('amount_remaining', '<=', $request->max);
-            })->orderBy('created_at', 'desc')->get();
+            })->orderBy('created_at', 'desc');
 
-        return $this->successResponse(ProjectResource::collection($projects));
+        $projectsTotal = $projectsQuery->count();
+        $projects = $projectsQuery->limit($limit)->skip($skip)->get();
+
+        $response = [
+            'pages_total' => (int)ceil($projectsTotal / $limit),
+            'projects' => ProjectResource::collection($projects),
+        ];
+
+        return $this->successResponse($response);
     }
 
     /**
@@ -79,9 +108,17 @@ class ProjectController extends Controller
      *     @OA\Parameter(name="amount_available",description="Amount available money",required=true,in="query",@OA\Schema(type="integer")),
      *     @OA\Parameter(name="amount_remaining",description="Amount remaining money",required=true,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.profile.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/store.update.project.response")),
      *     security={{"Authorization": {}}}
      * )
+     */
+
+    /**
+     * @OA\Schema(schema="store.update.project.response",
+     *   @OA\Property(property="success",type="boolean",example=true),
+     *   @OA\Property(property="errors_message",type="string",example=null),
+     *   @OA\Property(property="data",type="string", example="ok"),
+     *   )
      */
     public function store(ProjectStoreRequest $request)
     {
@@ -134,7 +171,7 @@ class ProjectController extends Controller
      *     @OA\Parameter(name="amount_available",description="Amount available money",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Parameter(name="amount_remaining",description="Amount remaining money",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.profile.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/store.update.project.response")),
      *     security={{"Authorization": {}}}
      * )
      */
