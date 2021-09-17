@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\GetProjectsRequest;
 use App\Http\Requests\Api\ProjectStoreRequest;
 use App\Http\Requests\Api\UpdateProjectRequest;
+use App\Http\Resources\ProjectResource;
 use App\Http\Traits\ApiResponsable;
 use App\Models\Project;
 use App\Models\User;
@@ -14,6 +16,49 @@ use Illuminate\Support\Facades\Storage;
 class ProjectController extends Controller
 {
     use ApiResponsable;
+
+    //TODO
+    // swagger responses
+
+    /**
+     * @OA\Get(
+     *     path="/api/projects",
+     *     description="Get projects with/without filters",
+     *     tags={"Projects"},
+     *     @OA\Parameter(name="category_ids",description="Array of category ids",required=false,in="query",@OA\Schema(type="array", @OA\Items(type="integer"))),
+     *     @OA\Parameter(name="currency",description="Currency",required=false,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="min",description="Min amount to invest",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="max",description="Max amount to invest",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.profile.response")),
+     *     security={{"Authorization": {}}}
+     * )
+     */
+    public function index(GetProjectsRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User is not authorized');
+        }
+
+        $projects = Project::when($request->category_ids, function ($query) use ($request) {
+            $query->whereIn('category_id', $request->category_ids);
+        })
+            ->when(!$request->category_ids && $user->user_type == User::INVESTOR, function ($query) use ($user) {
+                $query->whereIn('category_id', $user->typeable->categories->keyBy('id')->keys());
+            })
+            ->when($request->currency, function ($query) use ($request) {
+                $query->where('currency', $request->currency);
+            })
+            ->when($request->min, function ($query) use ($request) {
+                $query->where('amount_remaining', '>=', $request->min);
+            })
+            ->when($request->max, function ($query) use ($request) {
+                $query->where('amount_remaining', '<=', $request->max);
+            })->orderBy('created_at', 'desc')->get();
+
+        return $this->successResponse(ProjectResource::collection($projects));
+    }
 
     /**
      * @OA\Post(
