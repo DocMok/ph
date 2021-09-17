@@ -28,10 +28,10 @@ class CategoryController extends Controller
      * @OA\Schema(schema="get.categories.response",
      *   @OA\Property(property="success",type="boolean",example=true),
      *   @OA\Property(property="errors_message",type="string",example=null),
-     *   @OA\Property(property="data",type="object",
+     *   @OA\Property(property="data",type="array", @OA\Items(
      *      @OA\Property(property="id", type="integer",example=3),
      *      @OA\Property(property="name", type="string",example="Medical"),
-     *   ),
+     *   )),
      * )
      */
     public function getCategories(GetCategoriesRequest $request)

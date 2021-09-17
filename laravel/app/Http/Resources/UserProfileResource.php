@@ -16,11 +16,9 @@ class UserProfileResource extends JsonResource
      *     @OA\Property(property="email", type="string",example="mail@test.com"),
      *     @OA\Property(property="job", type="string",example="Backend developer"),
      *     @OA\Property(property="photo", type="string",example="http://100.10.100.10/path/to/photo.jpg"),
-     *     @OA\Property(property="projects", type="array",
-     *          @OA\Items(
-     *              @OA\Property(property="name", type="string", example="Project1"),
-     *          ),
-     *     ),
+     *      @OA\Property(property="projects", type="array",
+     *          @OA\Items(ref="#/components/schemas/project.response"),
+     *      ),
      * )
      */
 

@@ -6,11 +6,18 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectResource extends JsonResource
 {
+
     /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @OA\Schema(schema="project.response",
+     *          @OA\Property(property="id", type="integer",example=1),
+     *          @OA\Property(property="name", type="string",example="Best project ever"),
+     *          @OA\Property(property="description", type="string",example="Some description"),
+     *          @OA\Property(property="currency", type="string",example="usd"),
+     *          @OA\Property(property="amount_available", type="integer",example=1000),
+     *          @OA\Property(property="amount_remaining", type="integer",example=3000),
+     *          @OA\Property(property="category_id", type="integer",example=7),
+     *          @OA\Property(property="logo", type="string",example="http://100.10.100.10/path/to/logo.jpg"),
+     * )
      */
     public function toArray($request)
     {
@@ -21,7 +28,7 @@ class ProjectResource extends JsonResource
             'currency' => $this->currency,
             'amount_available' => $this->amount_available,
             'amount_remaining' => $this->amount_remaining,
-            'category' => $this->category_id,
+            'category_id' => $this->category_id,
             'logo' => $this->logo ?? null,
         ];
     }
