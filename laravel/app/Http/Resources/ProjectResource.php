@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectResource extends JsonResource
 {
@@ -17,6 +18,7 @@ class ProjectResource extends JsonResource
      *          @OA\Property(property="amount_remaining", type="integer",example=3000),
      *          @OA\Property(property="category_id", type="integer",example=7),
      *          @OA\Property(property="logo", type="string",example="http://100.10.100.10/path/to/logo.jpg"),
+     *          @OA\Property(property="is_liked", type="boolean",example=true),
      * )
      */
     public function toArray($request)
@@ -30,6 +32,7 @@ class ProjectResource extends JsonResource
             'amount_remaining' => $this->amount_remaining,
             'category_id' => $this->category_id,
             'logo' => $this->logo ?? null,
+            'is_liked' => $this->likes()->where('user_id', Auth::user()->id)->count() == 1,
         ];
     }
 }
