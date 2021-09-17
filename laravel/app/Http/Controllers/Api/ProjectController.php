@@ -19,9 +19,6 @@ class ProjectController extends Controller
 
     const MAX_ITEMS_PER_PAGE = 20;
 
-    //TODO
-    // swagger responses
-
     /**
      * @OA\Get(
      *     path="/api/projects",

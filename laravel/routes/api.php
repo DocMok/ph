@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\InvestorController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -25,3 +26,6 @@ Route::prefix('projects')->group(function () {
     });
 });
 
+Route::prefix('investors')->middleware('auth:api')->group(function () {
+    Route::get('/', [InvestorController::class, 'index']);
+});
