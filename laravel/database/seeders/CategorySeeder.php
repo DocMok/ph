@@ -15,7 +15,6 @@ class CategorySeeder extends Seeder
     public function run()
     {
         $categories = [
-            'All' => '‫الكل‬',
             'Agriculture' => '‫الزراعه‬',
             'Medical' => '‫الطب‬',
             'Electronics' => '‫إلكترونيات‬',
