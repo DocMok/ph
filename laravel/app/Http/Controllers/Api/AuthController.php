@@ -36,8 +36,7 @@ class AuthController extends Controller
      *     @OA\Parameter(name="phone",description="User's phone number",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="password",description="User's password",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="user_type",description="Values: ProjectOwner, Investor",required=true,in="query",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="category_ids",description="Array of category ids. Required when user_type=Investor",required=false,in="query",
-     *          @OA\Schema(type="array", @OA\Items(type="integer"))),
+     *     @OA\Parameter(name="category_ids",description="Array of type ids in json",required=false,in="query",@OA\Schema(type="json")),
      *     @OA\Parameter(name="amount",description="Amount. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Parameter(name="currency",description="Currency. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
@@ -84,7 +83,7 @@ class AuthController extends Controller
                 'amount'=> $request->amount,
                 'currency'=>$request->currency
             ]);
-            $userType->categories()->sync($request->category_ids);
+            $userType->categories()->sync(json_decode($request->category_ids));
         }
 
         $userType->user()->save($user);
@@ -92,7 +91,6 @@ class AuthController extends Controller
         $token = 'Bearer ' . $user->createToken('authToken')->accessToken;
         $response = ['user' => (new UserResource($user)), 'token' => $token];
         return $this->successResponse($response);
-
     }
 
     /**
