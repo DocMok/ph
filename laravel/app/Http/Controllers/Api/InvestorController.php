@@ -22,7 +22,7 @@ class InvestorController extends Controller
      *     path="/api/investors",
      *     description="Get investors with/without filters",
      *     tags={"Investors"},
-     *     @OA\Parameter(name="category_ids",description="Array of category ids",required=false,in="query",@OA\Schema(type="array", @OA\Items(type="integer"))),
+     *     @OA\Parameter(name="category_ids",description="Array of category ids",required=false,in="query",@OA\Schema(type="json")),
      *     @OA\Parameter(name="currency",description="Currency",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="min",description="Min amount to invest",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Parameter(name="max",description="Max amount to invest",required=false,in="query",@OA\Schema(type="integer")),
@@ -58,7 +58,7 @@ class InvestorController extends Controller
         $skip = ($page - 1) * $limit;
 
         $investorsQuery = Investor::when($request->category_ids, function ($query) use ($request) {
-            $query->whereIn('category_id', $request->category_ids);
+            $query->whereIn('category_id', json_decode($request->category_ids));
         })
             ->when(!$request->category_ids && $user->user_type == User::PROJECT_OWNER, function ($query) use ($user) {
                 $lastProject = $user->typeable->projects()->orderBy('created_at', 'desc')->first();

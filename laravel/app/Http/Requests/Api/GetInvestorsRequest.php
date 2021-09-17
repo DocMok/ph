@@ -26,8 +26,7 @@ class GetInvestorsRequest extends FormRequest
         return [
             'limit' => 'integer|min:1',
             'page' => 'integer|min:1',
-            'category_ids' => 'array',
-            'category_ids.*' => 'integer',
+            'category_ids' => 'json',
             'currency' => 'string',
             'min' => 'integer|min:0',
             'max' => 'integer|min:0',

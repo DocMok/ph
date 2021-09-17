@@ -24,7 +24,7 @@ class ProjectController extends Controller
      *     path="/api/projects",
      *     description="Get projects with/without filters",
      *     tags={"Projects"},
-     *     @OA\Parameter(name="category_ids",description="Array of category ids",required=false,in="query",@OA\Schema(type="array", @OA\Items(type="integer"))),
+     *     @OA\Parameter(name="category_ids",description="Array of category ids",required=false,in="query",@OA\Schema(type="json")),
      *     @OA\Parameter(name="currency",description="Currency",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="min",description="Min amount to invest",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Parameter(name="max",description="Max amount to invest",required=false,in="query",@OA\Schema(type="integer")),
@@ -60,7 +60,7 @@ class ProjectController extends Controller
         $skip = ($page - 1) * $limit;
 
         $projectsQuery = Project::when($request->category_ids, function ($query) use ($request) {
-            $query->whereIn('category_id', $request->category_ids);
+            $query->whereIn('category_id', json_decode($request->category_ids));
         })
             ->when(!$request->category_ids && $user->user_type == User::INVESTOR, function ($query) use ($user) {
                 $query->whereIn('category_id', $user->typeable->categories->keyBy('id')->keys());
