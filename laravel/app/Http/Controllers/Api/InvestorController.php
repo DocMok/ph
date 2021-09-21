@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GetInvestorsRequest;
+use App\Http\Requests\GetInvestorRequest;
 use App\Http\Requests\InvestorLikeRequest;
+use App\Http\Resources\InvestorProfileResource;
 use App\Http\Resources\InvestorResource;
 use App\Http\Traits\ApiResponsable;
 use App\Models\Investor;
@@ -91,6 +93,33 @@ class InvestorController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/investor",
+     *     description="Get investor profile",
+     *     tags={"Investors"},
+     *     @OA\Parameter(name="id",description="User id",required=true,in="query",@OA\Schema(type="integer")),
+     *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/investor.profile.for.other.response")),
+     *     security={{"Authorization": {}}}
+     * )
+     */
+    public function show(GetInvestorRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User is not authorized');
+        }
+
+        $investorUser = User::find($request->id);
+        if ($investorUser->user_type != User::INVESTOR) {
+            return $this->errorResponse('User is not investor');
+        }
+
+        $investor = Investor::find($investorUser->typeable->id);
+        return $this->successResponse(new InvestorProfileResource($investor));
+    }
+
+    /**
      * @OA\Post(
      *     path="/api/investor/like-toggle",
      *     description="Like investor",
@@ -101,7 +130,8 @@ class InvestorController extends Controller
      *     security={{"Authorization": {}}}
      * )
      */
-    public function likeToggle(InvestorLikeRequest $request) {
+    public function likeToggle(InvestorLikeRequest $request)
+    {
         $user = Auth::user();
         if (!$user) {
             return $this->errorResponse('User is not authorized');
