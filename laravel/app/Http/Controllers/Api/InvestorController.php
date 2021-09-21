@@ -59,7 +59,9 @@ class InvestorController extends Controller
         $skip = ($page - 1) * $limit;
 
         $investorsQuery = Investor::when($request->category_ids, function ($query) use ($request) {
-            $query->whereIn('category_id', json_decode($request->category_ids));
+            $query->whereHas('categories', function ($query) use ($request) {
+                $query->whereIn('category_id', json_decode($request->category_ids));
+            });
         })
             ->when(!$request->category_ids && $user->user_type == User::PROJECT_OWNER, function ($query) use ($user) {
                 $lastProject = $user->typeable->projects()->orderBy('created_at', 'desc')->first();
