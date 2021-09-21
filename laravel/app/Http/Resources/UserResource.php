@@ -12,7 +12,7 @@ class UserResource extends JsonResource
      * @OA\Schema(schema="user.response",
      *      @OA\Property(property="user", type="object",
      *          @OA\Property(property="id", type="integer",example=1),
-     *          @OA\Property(property="user_type", type="string",example="Investor"),
+     *          @OA\Property(property="user_type", type="string",example="ProjectOwner"),
      *          @OA\Property(property="name", type="string",example="John Dou"),
      *          @OA\Property(property="phone", type="string",example="380501234578"),
      *          @OA\Property(property="email", type="string",example="mail@test.com"),

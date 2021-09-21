@@ -96,7 +96,7 @@ class ProjectController extends Controller
      *     tags={"Projects"},
      *     @OA\Parameter(name="id",description="Project id",required=true,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/projects.list.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/one.project.response")),
      *     security={{"Authorization": {}}}
      * )
      */
