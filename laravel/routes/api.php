@@ -21,8 +21,6 @@ Route::prefix('projects')->group(function () {
     Route::get('categories', [CategoryController::class, 'getCategories']);
     Route::middleware('auth:api')->group(function () {
         Route::get('/', [ProjectController::class, 'index']);
-        Route::post('/', [ProjectController::class, 'store']);
-        Route::post('/update', [ProjectController::class, 'update']);
     });
 });
 
@@ -30,5 +28,11 @@ Route::prefix('investors')->middleware('auth:api')->group(function () {
     Route::get('/', [InvestorController::class, 'index']);
 });
 
-Route::middleware('auth:api')->post('project/like-toggle', [ProjectController::class, 'likeToggle']);
 Route::middleware('auth:api')->post('investor/like-toggle', [InvestorController::class, 'likeToggle']);
+
+Route::prefix('project')->middleware('auth:api')->group(function () {
+    Route::post('like-toggle', [ProjectController::class, 'likeToggle']);
+    Route::get('/', [ProjectController::class, 'show']);
+    Route::post('/', [ProjectController::class, 'store']);
+    Route::post('/update', [ProjectController::class, 'update']);
+});

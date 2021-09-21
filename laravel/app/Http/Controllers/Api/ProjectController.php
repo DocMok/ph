@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GetProjectsRequest;
 use App\Http\Requests\Api\ProjectStoreRequest;
 use App\Http\Requests\Api\UpdateProjectRequest;
+use App\Http\Requests\GetProjectRequest;
 use App\Http\Requests\ProjectLikeRequest;
+use App\Http\Resources\OneProjectResource;
 use App\Http\Resources\ProjectResource;
 use App\Http\Traits\ApiResponsable;
 use App\Models\Project;
@@ -88,8 +90,31 @@ class ProjectController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/project",
+     *     description="Get project info",
+     *     tags={"Projects"},
+     *     @OA\Parameter(name="id",description="Project id",required=true,in="query",@OA\Schema(type="integer")),
+     *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/projects.list.response")),
+     *     security={{"Authorization": {}}}
+     * )
+     */
+    public function show(GetProjectRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User is not authorized');
+        }
+
+        $project = Project::find($request->id);
+
+        return $this->successResponse(new OneProjectResource($project));
+    }
+
+    /**
      * @OA\Post(
-     *     path="/api/projects",
+     *     path="/api/project",
      *     description="Create project",
      *     tags={"Projects"},
      *     @OA\RequestBody(
@@ -151,7 +176,7 @@ class ProjectController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/projects/update",
+     *     path="/api/project/update",
      *     description="Update project",
      *     tags={"Projects"},
      *     @OA\RequestBody(
@@ -214,7 +239,8 @@ class ProjectController extends Controller
      *     security={{"Authorization": {}}}
      * )
      */
-    public function likeToggle(ProjectLikeRequest $request) {
+    public function likeToggle(ProjectLikeRequest $request)
+    {
         $user = Auth::user();
         if (!$user) {
             return $this->errorResponse('User is not authorized');
