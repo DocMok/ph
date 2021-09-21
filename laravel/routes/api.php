@@ -31,3 +31,4 @@ Route::prefix('investors')->middleware('auth:api')->group(function () {
 });
 
 Route::middleware('auth:api')->post('project/like-toggle', [ProjectController::class, 'likeToggle']);
+Route::middleware('auth:api')->post('investor/like-toggle', [InvestorController::class, 'likeToggle']);

@@ -11,11 +11,18 @@ class Investor extends Model
 
     protected $guarded = [];
 
-    public function user() {
+    public function user()
+    {
         return $this->morphOne(User::class, 'typeable');
     }
 
-    public function categories() {
+    public function categories()
+    {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'investor_user_likes');
     }
 }
