@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GetInvestorsRequest;
+use App\Http\Requests\Api\LikedInvestorsRequest;
 use App\Http\Requests\GetInvestorRequest;
 use App\Http\Requests\InvestorLikeRequest;
 use App\Http\Resources\InvestorProfileResource;
@@ -146,6 +147,40 @@ class InvestorController extends Controller
         $investor->likes()->toggle($user->id);
         $response = ['likes_total' => $investor->likes()->count()];
 
+        return $this->successResponse($response);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/investors/liked",
+     *     description="Liked investors",
+     *     tags={"Investors"},
+     *     @OA\Parameter(name="limit",description="Investors per page",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page",description="Page number",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/investors.list.response")),
+     *     security={{"Authorization": {}}}
+     * )
+     */
+    public function liked(LikedInvestorsRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User is not authorized');
+        }
+
+        $limit = $request->limit ?? self::MAX_ITEMS_PER_PAGE;
+        $page = $request->page ?? 1;
+        $skip = ($page - 1) * $limit;
+
+        $investorsQuery = $user->likedInvestors();
+        $investorsTotal = $investorsQuery->count();
+        $investors = $investorsQuery->limit($limit)->skip($skip)->get();
+
+        $response = [
+            'pages_total' => (int)ceil($investorsTotal / $limit),
+            'investors' => InvestorResource::collection($investors),
+        ];
         return $this->successResponse($response);
     }
 }

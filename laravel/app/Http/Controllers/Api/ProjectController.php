@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GetProjectsRequest;
+use App\Http\Requests\Api\LikedProjectsRequest;
 use App\Http\Requests\Api\ProjectStoreRequest;
 use App\Http\Requests\Api\UpdateProjectRequest;
 use App\Http\Requests\GetProjectRequest;
@@ -260,6 +261,40 @@ class ProjectController extends Controller
         $project->likes()->toggle($user->id);
         $response = ['likes_total' => $project->likes()->count()];
 
+        return $this->successResponse($response);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/projects/liked",
+     *     description="Liked projects",
+     *     tags={"Projects"},
+     *     @OA\Parameter(name="limit",description="Projects per page",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page",description="Page number",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/projects.list.response")),
+     *     security={{"Authorization": {}}}
+     * )
+     */
+    public function liked(LikedProjectsRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User is not authorized');
+        }
+
+        $limit = $request->limit ?? self::MAX_ITEMS_PER_PAGE;
+        $page = $request->page ?? 1;
+        $skip = ($page - 1) * $limit;
+
+        $projectsQuery = $user->likedProjects();
+        $projectsTotal = $projectsQuery->count();
+        $projects = $projectsQuery->limit($limit)->skip($skip)->get();
+
+        $response = [
+            'pages_total' => (int)ceil($projectsTotal / $limit),
+            'projects' => ProjectResource::collection($projects),
+        ];
         return $this->successResponse($response);
     }
 }
