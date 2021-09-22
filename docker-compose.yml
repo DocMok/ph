@@ -30,12 +30,14 @@ services:
       - ./containers/certbot/www:/var/www/certbot
     depends_on:
       - php
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
   certbot:
     image: certbot/certbot
     volumes:
       - ./containers/certbot/conf:/etc/letsencrypt
       - ./containers/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   mysql:
     image: mysql:8.0
