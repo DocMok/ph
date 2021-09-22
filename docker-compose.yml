@@ -26,8 +26,16 @@ services:
       - ./laravel:/var/www/html
       - ./containers/nginx/config:/etc/nginx/conf.d
       - ./containers/nginx/ssl:/etc/nginx/ssl
+      - ./containers/certbot/conf:/etc/letsencrypt
+      - ./containers/certbot/www:/var/www/certbot
     depends_on:
       - php
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./containers/certbot/conf:/etc/letsencrypt
+      - ./containers/certbot/www:/var/www/certbot
 
   mysql:
     image: mysql:8.0
