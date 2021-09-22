@@ -15,6 +15,7 @@ class InvestorResource extends JsonResource
      *          @OA\Property(property="currency", type="string",example="usd"),
      *          @OA\Property(property="amount", type="integer",example=1000),
      *          @OA\Property(property="photo", type="string",example="http://100.10.100.10/path/to/photo.jpg"),
+     *          @OA\Property(property="likes_total", type="integer",example=5),
      *          @OA\Property(property="is_liked", type="boolean",example=true),
      * )
      */
@@ -27,6 +28,7 @@ class InvestorResource extends JsonResource
             'currency' => $this->currency,
             'amount' => $this->amount,
             'photo' => $this->user->photo ?? null,
+            'likes_total' => $this->likes()->count(),
             'is_liked' => $this->likes()->where('user_id', Auth::user()->id)->count() == 1,
         ];
     }

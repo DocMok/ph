@@ -126,7 +126,7 @@ class InvestorController extends Controller
      *     tags={"Investors"},
      *     @OA\Parameter(name="id",description="User id",required=true,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/store.update.project.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/like.toggle.response")),
      *     security={{"Authorization": {}}}
      * )
      */
@@ -144,7 +144,8 @@ class InvestorController extends Controller
 
         $investor = Investor::find($investorUser->typeable->id);
         $investor->likes()->toggle($user->id);
+        $response = ['likes_total' => $investor->likes()->count()];
 
-        return $this->successResponse('ok');
+        return $this->successResponse($response);
     }
 }

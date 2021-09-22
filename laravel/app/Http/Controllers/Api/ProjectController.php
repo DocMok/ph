@@ -235,9 +235,19 @@ class ProjectController extends Controller
      *     tags={"Projects"},
      *     @OA\Parameter(name="id",description="Project id",required=true,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/store.update.project.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/like.toggle.response")),
      *     security={{"Authorization": {}}}
      * )
+     */
+
+    /**
+     * @OA\Schema(schema="like.toggle.response",
+     *   @OA\Property(property="success",type="boolean",example=true),
+     *   @OA\Property(property="errors_message",type="string",example=null),
+     *   @OA\Property(property="data",type="object",
+     *      @OA\Property(property="likes_total",type="integer",example=3),
+     *   ),
+     *   )
      */
     public function likeToggle(ProjectLikeRequest $request)
     {
@@ -248,7 +258,8 @@ class ProjectController extends Controller
 
         $project = Project::find($request->id);
         $project->likes()->toggle($user->id);
+        $response = ['likes_total' => $project->likes()->count()];
 
-        return $this->successResponse('ok');
+        return $this->successResponse($response);
     }
 }
