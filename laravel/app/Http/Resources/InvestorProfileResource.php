@@ -11,6 +11,7 @@ class InvestorProfileResource extends JsonResource
      * @OA\Schema(schema="investor.profile.for.other.response",
      *          @OA\Property(property="id", type="integer",example=1),
      *          @OA\Property(property="name", type="string",example="Best investor ever"),
+     *          @OA\Property(property="job", type="string",example="Best job ever"),
      *          @OA\Property(property="email", type="string",example="investor@gmail.com"),
      *          @OA\Property(property="category_ids", type="array",@OA\Items(type="integer")),
      *          @OA\Property(property="currency", type="string",example="usd"),
@@ -24,6 +25,7 @@ class InvestorProfileResource extends JsonResource
         return [
             'id' => $this->user->id,
             'name' => $this->user->name,
+            'job' => $this->job,
             'email' => $this->user->email ?? null,
             'category_ids' => $this->categories->keyBy('id')->keys()->toArray(),
             'currency' => $this->currency,
