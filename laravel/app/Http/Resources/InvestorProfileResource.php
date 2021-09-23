@@ -25,7 +25,7 @@ class InvestorProfileResource extends JsonResource
         return [
             'id' => $this->user->id,
             'name' => $this->user->name,
-            'job' => $this->job,
+            'job' => $this->user->job,
             'email' => $this->user->email ?? null,
             'category_ids' => $this->categories->keyBy('id')->keys()->toArray(),
             'currency' => $this->currency,
