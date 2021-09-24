@@ -12,10 +12,12 @@ use App\Http\Requests\ProjectLikeRequest;
 use App\Http\Resources\OneProjectResource;
 use App\Http\Resources\ProjectResource;
 use App\Http\Traits\ApiResponsable;
+use App\Models\NotificationToken;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Kreait\Firebase\Messaging\CloudMessage;
 
 class ProjectController extends Controller
 {
@@ -259,6 +261,26 @@ class ProjectController extends Controller
 
         $project = Project::find($request->id);
         $project->likes()->toggle($user->id);
+
+        $notificationTokens = $user->notificationTokens;
+
+        if (count($notificationTokens) > 0) {
+            $tokens = array_column($notificationTokens->toArray(), 'token');
+            $notification = CloudMessage::new()->withNotification([
+                'title' => 'TITLE',
+                'body' => 'MESSAGE TEXT',
+            ]);
+            $report = app('firebase.messaging')->sendMulticast($notification, $tokens);
+
+            $badTokens = array_merge($report->unknownTokens(), $report->invalidTokens());
+
+            foreach ($notificationTokens as $notificationToken) {
+                if (in_array($notificationToken->token, $badTokens)) {
+                    NotificationToken::where('token', $notificationToken->token)->delete();
+                }
+            }
+        }
+
         $response = ['likes_total' => $project->likes()->count()];
 
         return $this->successResponse($response);

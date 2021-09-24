@@ -11,9 +11,11 @@ use App\Http\Resources\InvestorProfileResource;
 use App\Http\Resources\InvestorResource;
 use App\Http\Traits\ApiResponsable;
 use App\Models\Investor;
+use App\Models\NotificationToken;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Kreait\Firebase\Messaging\CloudMessage;
 
 class InvestorController extends Controller
 {
@@ -145,6 +147,27 @@ class InvestorController extends Controller
 
         $investor = Investor::find($investorUser->typeable->id);
         $investor->likes()->toggle($user->id);
+
+        $notificationTokens = $user->notificationTokens;
+
+        if (count($notificationTokens) > 0) {
+            $tokens = array_column($notificationTokens->toArray(), 'token');
+            $notification = CloudMessage::new()->withNotification([
+                'title' => 'TITLE',
+                'body' => 'MESSAGE TEXT',
+            ]);
+            $report = app('firebase.messaging')->sendMulticast($notification, $tokens);
+
+            $badTokens = array_merge($report->unknownTokens(), $report->invalidTokens());
+
+            foreach ($notificationTokens as $notificationToken) {
+                if (in_array($notificationToken->token, $badTokens)) {
+                    NotificationToken::where('token', $notificationToken->token)->delete();
+                }
+            }
+        }
+
+
         $response = ['likes_total' => $investor->likes()->count()];
 
         return $this->successResponse($response);
