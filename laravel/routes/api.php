@@ -18,9 +18,12 @@ Route::prefix('user')->group(function () {
         Route::prefix('fcm-tokens')->group(function () {
             Route::post('/', [NotificationTokenController::class, 'store']);
             Route::get('/', [NotificationTokenController::class, 'index']);
+            Route::put('/', [NotificationTokenController::class, 'update']);
+            Route::delete('/', [NotificationTokenController::class, 'destroy']);
         });
     });
 });
+
 
 Route::prefix('projects')->group(function () {
     Route::get('categories', [CategoryController::class, 'getCategories']);

@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Http\Traits\ApiValidationError;
 use Illuminate\Foundation\Http\FormRequest;
 
-class NotificationTokenStoreRequest extends FormRequest
+class UpdateNotificationTokenRequest extends FormRequest
 {
+    use ApiValidationError;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,7 +27,8 @@ class NotificationTokenStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'token' => 'required|string',
+            'old_token' => 'required|string',
+            'new_token' => 'required|string',
         ];
     }
 }
