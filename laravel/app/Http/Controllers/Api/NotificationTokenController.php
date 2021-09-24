@@ -21,13 +21,13 @@ class NotificationTokenController extends Controller
      *     tags={"FCM tokens"},
      *     @OA\Parameter(name="token",description="token",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/fcm.token.store.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/fcm.token.store.update.delete.response")),
      *     security={{"Authorization": {}}}
      * )
      */
 
     /**
-     * @OA\Schema(schema="fcm.token.store.response",
+     * @OA\Schema(schema="fcm.token.store.update.delete.response",
      *   @OA\Property(property="success",type="boolean",example=true),
      *   @OA\Property(property="errors_message",type="string",example=null),
      *   @OA\Property(property="data",type="string", example="ok"),
@@ -85,7 +85,7 @@ class NotificationTokenController extends Controller
      *     @OA\Parameter(name="old_token",description="old token",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="new_token",description="new token",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/fcm.token.get.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/fcm.token.store.update.delete.response")),
      *     security={{"Authorization": {}}}
      * )
      */
@@ -113,7 +113,7 @@ class NotificationTokenController extends Controller
      *     tags={"FCM tokens"},
      *     @OA\Parameter(name="token",description="user token",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/fcm.token.get.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/fcm.token.store.update.delete.response")),
      *     security={{"Authorization": {}}}
      * )
      */
