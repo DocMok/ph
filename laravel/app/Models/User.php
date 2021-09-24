@@ -65,4 +65,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Investor::class, 'investor_user_likes');
     }
+
+    public function notificationTokens()
+    {
+        return $this->hasMany(NotificationToken::class);
+    }
 }
