@@ -153,8 +153,8 @@ class InvestorController extends Controller
         if (count($notificationTokens) > 0) {
             $tokens = array_column($notificationTokens->toArray(), 'token');
             $notification = CloudMessage::new()->withNotification([
-                'title' => 'TITLE',
-                'body' => 'MESSAGE TEXT',
+                'title' => 'PartnerHub Notification',
+                'body' => 'You liked '.$investor->name.' recently',
             ]);
             $report = app('firebase.messaging')->sendMulticast($notification, $tokens);
 
