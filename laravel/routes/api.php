@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\InvestorController;
 use App\Http\Controllers\Api\NotificationTokenController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\UserProfileController;
+use App\Http\Controllers\UserNotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('user')->group(function () {
@@ -15,6 +16,7 @@ Route::prefix('user')->group(function () {
         Route::get('logout', [AuthController::class, 'logout']);
         Route::post('profile', [UserProfileController::class, 'updateProfile']);
         Route::get('profile', [UserProfileController::class, 'getProfile']);
+        Route::get('notifications', [UserNotificationController::class, 'index']);
         Route::prefix('fcm-tokens')->group(function () {
             Route::post('/', [NotificationTokenController::class, 'store']);
             Route::get('/', [NotificationTokenController::class, 'index']);

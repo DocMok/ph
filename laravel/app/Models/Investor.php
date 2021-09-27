@@ -25,4 +25,9 @@ class Investor extends Model
     {
         return $this->belongsToMany(User::class, 'investor_user_likes');
     }
+
+    public function notices()
+    {
+        return $this->morphMany(Notice::class, 'notificateable');
+    }
 }

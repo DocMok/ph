@@ -25,4 +25,9 @@ class Project extends Model
     {
         return $this->belongsToMany(User::class, 'project_user_likes');
     }
+
+    public function notices()
+    {
+        return $this->morphMany(Notice::class, 'notificateable');
+    }
 }

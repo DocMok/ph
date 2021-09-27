@@ -11,6 +11,7 @@ use App\Http\Requests\GetProjectRequest;
 use App\Http\Requests\ProjectLikeRequest;
 use App\Http\Resources\OneProjectResource;
 use App\Http\Resources\ProjectResource;
+use App\Http\Services\NotificationService;
 use App\Http\Traits\ApiResponsable;
 use App\Models\NotificationToken;
 use App\Models\Project;
@@ -252,7 +253,7 @@ class ProjectController extends Controller
      *   ),
      *   )
      */
-    public function likeToggle(ProjectLikeRequest $request)
+    public function likeToggle(ProjectLikeRequest $request, NotificationService $NS)
     {
         $user = Auth::user();
         if (!$user) {
@@ -262,24 +263,10 @@ class ProjectController extends Controller
         $project = Project::find($request->id);
         $project->likes()->toggle($user->id);
 
-        $notificationTokens = $user->notificationTokens;
+        $title = 'PartnerHub notification';
+        $body = 'Somebody liked your project ' . $project->name . ' recently';
 
-        if (count($notificationTokens) > 0) {
-            $tokens = array_column($notificationTokens->toArray(), 'token');
-            $notification = CloudMessage::new()->withNotification([
-                'title' => 'PartnerHub Notification',
-                'body' => 'You liked '.$project->name.' recently',
-            ]);
-            $report = app('firebase.messaging')->sendMulticast($notification, $tokens);
-
-            $badTokens = array_merge($report->unknownTokens(), $report->invalidTokens());
-
-            foreach ($notificationTokens as $notificationToken) {
-                if (in_array($notificationToken->token, $badTokens)) {
-                    NotificationToken::where('token', $notificationToken->token)->delete();
-                }
-            }
-        }
+        $NS->notificate($user, $project->projectOwner->user, $project, $title, $body, 'Liked your project');
 
         $response = ['likes_total' => $project->likes()->count()];
 

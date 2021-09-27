@@ -70,4 +70,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(NotificationToken::class);
     }
+
+    public function notices()
+    {
+        return $this->hasMany(Notice::class, 'from_user_id', 'id');
+    }
 }

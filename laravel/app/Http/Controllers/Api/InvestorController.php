@@ -9,13 +9,11 @@ use App\Http\Requests\GetInvestorRequest;
 use App\Http\Requests\InvestorLikeRequest;
 use App\Http\Resources\InvestorProfileResource;
 use App\Http\Resources\InvestorResource;
+use App\Http\Services\NotificationService;
 use App\Http\Traits\ApiResponsable;
 use App\Models\Investor;
-use App\Models\NotificationToken;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Kreait\Firebase\Messaging\CloudMessage;
 
 class InvestorController extends Controller
 {
@@ -133,7 +131,7 @@ class InvestorController extends Controller
      *     security={{"Authorization": {}}}
      * )
      */
-    public function likeToggle(InvestorLikeRequest $request)
+    public function likeToggle(InvestorLikeRequest $request, NotificationService $NS)
     {
         $user = Auth::user();
         if (!$user) {
@@ -148,25 +146,10 @@ class InvestorController extends Controller
         $investor = Investor::find($investorUser->typeable->id);
         $investor->likes()->toggle($user->id);
 
-        $notificationTokens = $user->notificationTokens;
+        $title = 'PartnerHub notification';
+        $body = 'Somebody liked you recently';
 
-        if (count($notificationTokens) > 0) {
-            $tokens = array_column($notificationTokens->toArray(), 'token');
-            $notification = CloudMessage::new()->withNotification([
-                'title' => 'PartnerHub Notification',
-                'body' => 'You liked '.$investor->user->name.' recently',
-            ]);
-            $report = app('firebase.messaging')->sendMulticast($notification, $tokens);
-
-            $badTokens = array_merge($report->unknownTokens(), $report->invalidTokens());
-
-            foreach ($notificationTokens as $notificationToken) {
-                if (in_array($notificationToken->token, $badTokens)) {
-                    NotificationToken::where('token', $notificationToken->token)->delete();
-                }
-            }
-        }
-
+        $NS->notificate($user, $investorUser, $investor, $title, $body, 'Liked you');
 
         $response = ['likes_total' => $investor->likes()->count()];
 
