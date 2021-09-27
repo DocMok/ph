@@ -12,6 +12,7 @@ use App\Models\ProjectOwner;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -118,6 +119,7 @@ class AuthController extends Controller
         if ($user) {
             $token = 'Bearer ' . $user->createToken('authToken')->accessToken;
             $response = ['user' => (new UserResource($user)), 'token' => $token];
+            Log::info("Login: ", $user->toArray());
             return $this->successResponse($response);
         }
 
