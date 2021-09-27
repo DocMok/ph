@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use App\Http\Traits\ApiValidationError;
 use Illuminate\Foundation\Http\FormRequest;
 
-class InvestorLikeRequest extends FormRequest
+class GetProjectRequest extends FormRequest
 {
     use ApiValidationError;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,7 +27,7 @@ class InvestorLikeRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|exists:users,id',
+            'id' => 'required|exists:projects,id',
         ];
     }
 }

@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\InvestorController;
 use App\Http\Controllers\Api\NotificationTokenController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\UserProfileController;
-use App\Http\Controllers\UserNotificationController;
+use App\Http\Controllers\Api\UserNotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('user')->group(function () {
