@@ -8,6 +8,22 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class NoticeResource extends JsonResource
 {
 
+    /**
+     * @OA\Schema(schema="notice.response",
+     *     @OA\Property(property="id", type="integer",example=3),
+     *     @OA\Property(property="text", type="string",example="Some message text"),
+     *     @OA\Property(property="from_user", type="object", ref="#/components/schemas/user.response"),
+     * )
+     */
+
+    /**
+     * @OA\Schema(schema="notice.response.with.project",
+     *     @OA\Property(property="id", type="integer",example=3),
+     *     @OA\Property(property="text", type="string",example="Some message text"),
+     *     @OA\Property(property="from_user", type="object", ref="#/components/schemas/user.response"),
+     *     @OA\Property(property="project", type="object",ref="#/components/schemas/project.response"),
+     * )
+     */
     public function toArray($request)
     {
         return [

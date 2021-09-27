@@ -13,12 +13,10 @@ use App\Http\Resources\OneProjectResource;
 use App\Http\Resources\ProjectResource;
 use App\Http\Services\NotificationService;
 use App\Http\Traits\ApiResponsable;
-use App\Models\NotificationToken;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Kreait\Firebase\Messaging\CloudMessage;
 
 class ProjectController extends Controller
 {

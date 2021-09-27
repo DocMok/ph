@@ -33,7 +33,10 @@ class UserNotificationController extends Controller
      *   @OA\Property(property="data",type="object",
      *      @OA\Property(property="pages_total", type="integer", example=3),
      *      @OA\Property(property="notifications", type="array",
-     *          @OA\Items(ref="#/components/schemas/notice.response"),
+     *          @OA\Items(oneOf={
+     *              @OA\Schema(ref="#/components/schemas/notice.response.with.project"),
+     *              @OA\Schema(ref="#/components/schemas/notice.response")},
+     *          ),
      *      ),
      *   ),
      * )
