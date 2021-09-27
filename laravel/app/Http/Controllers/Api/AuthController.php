@@ -90,6 +90,7 @@ class AuthController extends Controller
 
         $token = 'Bearer ' . $user->createToken('authToken')->accessToken;
         $response = ['user' => (new UserResource($user)), 'token' => $token];
+        Log::info("Signup: ", $user->toArray());
         return $this->successResponse($response);
     }
 
