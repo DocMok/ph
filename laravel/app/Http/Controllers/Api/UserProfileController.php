@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\GetUserProfileRequest;
 use App\Http\Requests\Api\UpdateUserProfileRequest;
 use App\Http\Resources\UserProfileResource;
 use App\Http\Traits\ApiResponsable;
@@ -19,6 +20,7 @@ class UserProfileController extends Controller
      *     path="/api/user/profile",
      *     description="Get user profile. !!!ATTENTION!!! Response may has different structure (see in schemas: project.owner.profile.response, investor.profile.response)",
      *     tags={"User"},
+     *     @OA\Parameter(name="id",description="User id",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.profile.response")),
      *     security={{"Authorization": {}}}
@@ -35,12 +37,13 @@ class UserProfileController extends Controller
      *   ),
      * )
      */
-    public function getProfile()
+    public function getProfile(GetUserProfileRequest $request)
     {
         $user = Auth::user();
         if (!$user) {
             return $this->errorResponse('User is not authorized');
         }
+        !$request->id ?: $user = User::find($request->id);
         return $this->successResponse(new UserProfileResource($user));
     }
 
