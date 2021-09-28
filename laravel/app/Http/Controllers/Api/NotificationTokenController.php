@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DeleteNotificationTokenRequest;
+use App\Http\Requests\Api\GetUserNotificationTokensRequest;
 use App\Http\Requests\Api\StoreNotificationTokenRequest;
 use App\Http\Requests\Api\UpdateNotificationTokenRequest;
 use App\Http\Traits\ApiResponsable;
 use App\Models\NotificationToken;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationTokenController extends Controller
@@ -51,8 +53,9 @@ class NotificationTokenController extends Controller
     /**
      * @OA\Get(
      *     path="/api/user/fcm-tokens",
-     *     description="Get user fcm tokens",
+     *     description="Get authenticated user fcm tokens or tokens by user id",
      *     tags={"FCM tokens"},
+     *     @OA\Parameter(name="id",description="User id",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/fcm.token.get.response")),
      *     security={{"Authorization": {}}}
@@ -66,12 +69,14 @@ class NotificationTokenController extends Controller
      *   @OA\Property(property="data",type="array", example={"token1", "token2"},@OA\Items(type="string")),
      *   )
      */
-    public function index()
+    public function index(GetUserNotificationTokensRequest $request)
     {
         $user = Auth::user();
         if (!$user) {
             return $this->errorResponse('User is not authorized');
         }
+
+        !$request->id ?: $user = User::find($request->id);
 
         $tokens = $user->notificationTokens->pluck(['token']);
         return $this->successResponse($tokens);
