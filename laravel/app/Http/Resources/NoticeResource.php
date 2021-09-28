@@ -19,6 +19,7 @@ class NoticeResource extends JsonResource
     /**
      * @OA\Schema(schema="notice.response.with.project",
      *     @OA\Property(property="id", type="integer",example=3),
+     *     @OA\Property(property="type", type="string",example="ProjectLike"),
      *     @OA\Property(property="created_at", type="date-time",example="2000-01-01T00:07:18.000000Z"),
      *     @OA\Property(property="text", type="string",example="Some message text"),
      *     @OA\Property(property="from_user", type="object", ref="#/components/schemas/user.response"),
