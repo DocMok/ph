@@ -144,12 +144,14 @@ class InvestorController extends Controller
         }
 
         $investor = Investor::find($investorUser->typeable->id);
-        $investor->likes()->toggle($user->id);
+        $toggleResult = $investor->likes()->toggle($user->id);
 
-        $title = 'PartnerHub notification';
-        $body = 'Somebody liked you recently';
+        if (!empty($toggleResult['attached'])) {
+            $title = 'PartnerHub notification';
+            $body = 'Somebody liked you recently';
 
-        $NS->notificate($user, $investorUser, $investor, $title, $body, 'Liked you');
+            $NS->notificate($user, $investorUser, $investor, $title, $body, 'Liked you');
+        }
 
         $response = ['likes_total' => $investor->likes()->count()];
 

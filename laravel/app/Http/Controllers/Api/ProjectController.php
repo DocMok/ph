@@ -259,12 +259,14 @@ class ProjectController extends Controller
         }
 
         $project = Project::find($request->id);
-        $project->likes()->toggle($user->id);
+        $toggleResult = $project->likes()->toggle($user->id);
 
-        $title = 'PartnerHub notification';
-        $body = 'Somebody liked your project ' . $project->name . ' recently';
+        if (!empty($toggleResult['attached'])) {
+            $title = 'PartnerHub notification';
+            $body = 'Somebody liked your project ' . $project->name . ' recently';
 
-        $NS->notificate($user, $project->projectOwner->user, $project, $title, $body, 'Liked your project');
+            $NS->notificate($user, $project->projectOwner->user, $project, $title, $body, 'Liked your project');
+        }
 
         $response = ['likes_total' => $project->likes()->count()];
 
