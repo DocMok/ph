@@ -32,7 +32,7 @@ class ProjectResource extends JsonResource
             'amount_available' => $this->amount_available,
             'amount_remaining' => $this->amount_remaining,
             'category_id' => $this->category_id,
-            'logo' => $this->logo ?? null,
+            'logo' => $this->logo ? asset('storage/'.$this->logo) : null,
             'likes_total' => $this->likes()->count(),
             'is_liked' => $this->likes()->where('user_id', Auth::user()->id)->count() == 1,
         ];

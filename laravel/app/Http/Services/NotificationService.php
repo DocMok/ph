@@ -5,11 +5,12 @@ namespace App\Http\Services;
 use App\Models\Notice;
 use App\Models\NotificationToken;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Kreait\Firebase\Messaging\CloudMessage;
 
 class NotificationService
 {
-    public function notificate(User $fromUser, User $toUser, $notificateAbout, string $pushTitle, string $pushBody, string $text) {
+    public function notificate(User $fromUser, User $toUser, Model $notificateAbout, string $pushTitle, string $pushBody, string $text) {
 
         $notification = Notice::create([
             'from_user_id' => $fromUser->id,
