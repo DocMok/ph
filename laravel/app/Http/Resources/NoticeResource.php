@@ -29,6 +29,7 @@ class NoticeResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'type' => $this->notice_type . 'Like',
             'created_at' => $this->created_at,
             'text' => $this->text,
             'from_user' => new UserResource($this->fromUser),
