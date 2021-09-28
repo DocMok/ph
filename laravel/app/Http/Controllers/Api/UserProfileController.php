@@ -19,7 +19,7 @@ class UserProfileController extends Controller
      * @OA\Get(
      *     path="/api/user/profile",
      *     description="Get user profile. !!!ATTENTION!!! Response may has different structure (see in schemas: project.owner.profile.response, investor.profile.response)",
-     *     tags={"User"},
+     *     tags={"User profile"},
      *     @OA\Parameter(name="id",description="User id",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.profile.response")),
@@ -52,7 +52,7 @@ class UserProfileController extends Controller
      * @OA\Post (
      *     path="/api/user/profile",
      *     description="Update user profile",
-     *     tags={"User"},
+     *     tags={"User profile"},
      *     @OA\RequestBody(
      *         @OA\MediaType(mediaType="multipart/form-data",
      *              @OA\Schema(

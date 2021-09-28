@@ -99,9 +99,9 @@ class AuthController extends Controller
      *     path="/api/user/login",
      *     description="Login",
      *     tags={"Auth"},
-     *     @OA\Parameter(name="email",description="Unique user email",required=false,in="query",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="phone",description="User's phone number",required=false,in="query",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="password",description="User's password",required=true,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="email",description="User email",required=false,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="phone",description="[OR] User phone number",required=false,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="password",description="User password",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.auth.response"))
      * )
