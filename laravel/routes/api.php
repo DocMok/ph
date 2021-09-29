@@ -9,6 +9,10 @@ use App\Http\Controllers\Api\UserProfileController;
 use App\Http\Controllers\Api\UserNotificationController;
 use Illuminate\Support\Facades\Route;
 
+//TODO
+//  decrease throttle limit in
+//  RouteServiceProvider->configureRateLimiting
+//  to 60 after tests!!!
 Route::prefix('user')->group(function () {
     Route::post('signup', [AuthController::class, 'signup']);
     Route::get('login', [AuthController::class, 'login']);
@@ -52,5 +56,3 @@ Route::prefix('project')->middleware('auth:api')->group(function () {
     Route::post('/', [ProjectController::class, 'store']);
     Route::post('/update', [ProjectController::class, 'update']);
 });
-
-
