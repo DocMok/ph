@@ -17,7 +17,7 @@ class ProjectResource extends JsonResource
      *          @OA\Property(property="amount_available", type="integer",example=1000),
      *          @OA\Property(property="amount_remaining", type="integer",example=3000),
      *          @OA\Property(property="category_id", type="integer",example=7),
-     *          @OA\Property(property="logo", type="string",example="http://100.10.100.10/path/to/logo.jpg"),
+     *          @OA\Property(property="user_photo", type="string",example="http://100.10.100.10/path/to/logo.jpg"),
      *          @OA\Property(property="likes_total", type="integer",example=5),
      *          @OA\Property(property="is_liked", type="boolean",example=true),
      * )
@@ -32,7 +32,7 @@ class ProjectResource extends JsonResource
             'amount_available' => $this->amount_available,
             'amount_remaining' => $this->amount_remaining,
             'category_id' => $this->category_id,
-            'logo' => $this->logo ? asset('storage/'.$this->logo) : null,
+            'user_photo' => $this->projectOwner->user->photo ? asset('storage/'.$this->projectOwner->user->photo) : null,
             'likes_total' => $this->likes()->count(),
             'is_liked' => $this->likes()->where('user_id', Auth::user()->id)->count() == 1,
         ];
