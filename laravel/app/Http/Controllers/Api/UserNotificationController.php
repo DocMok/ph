@@ -53,7 +53,7 @@ class UserNotificationController extends Controller
         $page = $request->page ?? 1;
         $skip = ($page - 1) * $limit;
 
-        $notificationsQuery = $user->notices();
+        $notificationsQuery = $user->notices()->orderBy('created_at', 'desc');
 
         $notificationsTotal = $notificationsQuery->count();
         $notifications = $notificationsQuery->limit($limit)->skip($skip)->get();
