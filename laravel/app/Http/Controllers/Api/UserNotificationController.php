@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GetUserNotificationsRequest;
+use App\Http\Requests\Api\UpdateNotificationsRequest;
 use App\Http\Resources\NoticeResource;
 use App\Http\Traits\ApiResponsable;
+use App\Models\Notice;
 use Illuminate\Support\Facades\Auth;
 
 class UserNotificationController extends Controller
@@ -64,5 +66,36 @@ class UserNotificationController extends Controller
         ];
 
         return $this->successResponse($response);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/api/user/notifications",
+     *     description="Update is_viewed notifications status",
+     *     tags={"Notifications"},
+     *     @OA\Parameter(name="notification_ids",description="Array of notification ids",required=true,in="query",@OA\Schema(type="json")),
+     *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/update.notifications.response")),
+     *     security={{"Authorization": {}}}
+     * )
+     */
+    /**
+     * @OA\Schema(schema="update.notifications.response",
+     *   @OA\Property(property="success",type="boolean",example=true),
+     *   @OA\Property(property="errors_message",type="string",example=null),
+     *   @OA\Property(property="data",type="object",example="ok"),
+     * )
+     */
+    public function update(UpdateNotificationsRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User is not authorized');
+        }
+        $notificationIds = json_decode($request->notification_ids);
+        $updatedCount = Notice::whereIn('id', $notificationIds)->update(['is_viewed' => true]);
+        return count($notificationIds) == $updatedCount
+            ? $this->successResponse('ok')
+            : $this->errorResponse('Some notifications have not been updated');
     }
 }
