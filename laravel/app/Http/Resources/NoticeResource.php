@@ -33,7 +33,7 @@ class NoticeResource extends JsonResource
             'id' => $this->id,
             'type' => $this->notice_type . 'Like',
             'created_at' => $this->created_at,
-            'is_viewed' => $this->is_viewed,
+            'is_viewed' => (bool)$this->is_viewed,
             'text' => $this->text,
             'from_user' => new UserResource($this->fromUser),
             'project' => $this->when($this->notice_type == Notice::PROJECT,
