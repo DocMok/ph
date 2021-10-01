@@ -21,7 +21,10 @@ Route::prefix('user')->group(function () {
         Route::get('logout', [AuthController::class, 'logout']);
         Route::post('profile', [UserProfileController::class, 'updateProfile']);
         Route::get('profile', [UserProfileController::class, 'getProfile']);
-        Route::get('notifications', [UserNotificationController::class, 'index']);
+        Route::prefix('notifications')->group(function () {
+            Route::get('/', [UserNotificationController::class, 'index']);
+            Route::put('/', [UserNotificationController::class, 'update']);
+        });
         Route::get('suggestions', [UserSuggestionsController::class, 'index']);
         Route::prefix('fcm-tokens')->group(function () {
             Route::post('/', [NotificationTokenController::class, 'store']);
