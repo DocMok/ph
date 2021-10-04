@@ -34,7 +34,8 @@ class UpdateUserProfileRequest extends FormRequest
             'job' => 'string',
             'currency' => 'string',
             'amount' => 'integer',
-            'category_ids' => 'json',
+            'category_ids' => 'array',
+            'category_ids.*' => 'integer',
             'photo' => 'mimes:jpg,png|max:1024',
         ];
     }
