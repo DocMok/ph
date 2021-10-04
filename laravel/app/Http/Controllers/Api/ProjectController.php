@@ -64,21 +64,7 @@ class ProjectController extends Controller
         $page = $request->page ?? 1;
         $skip = ($page - 1) * $limit;
 
-        $projectsQuery = Project::when($request->category_ids, function ($query) use ($request) {
-            $query->whereIn('category_id', json_decode($request->category_ids));
-        })
-            ->when(!$request->category_ids && $user->user_type == User::INVESTOR, function ($query) use ($user) {
-                $query->whereIn('category_id', $user->typeable->categories->keyBy('id')->keys());
-            })
-            ->when($request->currency, function ($query) use ($request) {
-                $query->where('currency', $request->currency);
-            })
-            ->when($request->min, function ($query) use ($request) {
-                $query->where('amount_remaining', '>=', $request->min);
-            })
-            ->when($request->max, function ($query) use ($request) {
-                $query->where('amount_remaining', '<=', $request->max);
-            })->orderBy('created_at', 'desc');
+        $projectsQuery = Project::filter($request, $user);
 
         $projectsTotal = $projectsQuery->count();
         $projects = $projectsQuery->limit($limit)->skip($skip)->get();
