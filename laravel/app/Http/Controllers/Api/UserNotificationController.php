@@ -35,6 +35,7 @@ class UserNotificationController extends Controller
      *   @OA\Property(property="errors_message",type="string",example=null),
      *   @OA\Property(property="data",type="object",
      *      @OA\Property(property="pages_total", type="integer", example=3),
+     *      @OA\Property(property="not_viewed_total", type="integer", example=7),
      *      @OA\Property(property="notifications", type="array",
      *          @OA\Items(oneOf={
      *              @OA\Schema(ref="#/components/schemas/notice.response.with.project"),
@@ -62,6 +63,7 @@ class UserNotificationController extends Controller
 
         $response = [
             'pages_total' => (int)ceil($notificationsTotal / $limit),
+            'not_viewed_total' => $user->notices()->where('is_viewed', false)->count(),
             'notifications' => NoticeResource::collection($notifications),
         ];
 
