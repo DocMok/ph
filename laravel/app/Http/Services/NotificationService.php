@@ -10,7 +10,8 @@ use Kreait\Firebase\Messaging\CloudMessage;
 
 class NotificationService
 {
-    public function notificate(User $fromUser, User $toUser, Model $notificateAbout, string $pushTitle, string $pushBody, string $text) {
+    public function notificate(User $fromUser, User $toUser, Model $notificateAbout, string $pushTitle, string $pushBody, string $text)
+    {
 
         $notification = Notice::create([
             'from_user_id' => $fromUser->id,
@@ -22,7 +23,8 @@ class NotificationService
         $this->sendPush($toUser, $pushTitle, $pushBody);
     }
 
-    private function sendPush(User $toUser, string $title, string $body): void {
+    private function sendPush(User $toUser, string $title, string $body): void
+    {
         $notificationTokens = $toUser->notificationTokens;
 
         if (count($notificationTokens) > 0) {
@@ -30,7 +32,8 @@ class NotificationService
             $notification = CloudMessage::new()->withNotification([
                 'title' => $title,
                 'body' => $body,
-            ]);
+            ])
+                ->withData(['event' => 'new_like']);
             $report = app('firebase.messaging')->sendMulticast($notification, $tokens);
 
             $badTokens = array_merge($report->unknownTokens(), $report->invalidTokens());
