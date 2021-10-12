@@ -33,6 +33,7 @@ class NotificationService
                 'title' => $title,
                 'body' => $body,
             ])
+                ->withDefaultSounds()
                 ->withData(['event' => 'new_like']);
             $report = app('firebase.messaging')->sendMulticast($notification, $tokens);
 
