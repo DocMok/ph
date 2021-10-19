@@ -114,6 +114,10 @@ class ProjectController extends Controller
      *     ),
      *     @OA\Parameter(name="name",description="Project name",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="description",description="Project description",required=true,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="product_or_service_description",description="Additional text 1",required=false,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="resources_available_needed",description="Additional text 2",required=false,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="total_time_frame_and_cost",description="Additional text 3",required=false,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="expected_revenue_and_profits",description="Additional text 4",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="category_id",description="Category id",required=true,in="query",@OA\Schema(type="integer")),
      *     @OA\Parameter(name="currency",description="Currency",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="amount_available",description="Amount available money",required=true,in="query",@OA\Schema(type="integer")),
@@ -150,6 +154,10 @@ class ProjectController extends Controller
             'currency' => $request->currency,
             'amount_available' => $request->amount_available,
             'amount_remaining' => $request->amount_remaining,
+            'product_or_service_description' => $request->product_or_service_description ?? null,
+            'resources_available_needed' => $request->resources_available_needed ?? null,
+            'total_time_frame_and_cost' => $request->total_time_frame_and_cost ?? null,
+            'expected_revenue_and_profits' => $request->expected_revenue_and_profits ?? null,
         ]);
 
         if ($request->file('logo')) {

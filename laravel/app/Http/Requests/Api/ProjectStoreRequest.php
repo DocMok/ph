@@ -29,6 +29,10 @@ class ProjectStoreRequest extends FormRequest
         return [
             'name' => 'required|string|unique:projects,name',
             'description' => 'required|string',
+            'product_or_service_description' => 'string',
+            'resources_available_needed' => 'string',
+            'total_time_frame_and_cost' => 'string',
+            'expected_revenue_and_profits' => 'string',
             'category_id' => 'required|exists:categories,id',
             'currency' => 'required|string',
             'amount_available' => 'required|integer',
