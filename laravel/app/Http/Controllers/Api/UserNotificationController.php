@@ -9,6 +9,7 @@ use App\Http\Resources\NoticeResource;
 use App\Http\Traits\ApiResponsable;
 use App\Models\Notice;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UserNotificationController extends Controller
 {
@@ -47,6 +48,7 @@ class UserNotificationController extends Controller
      */
     public function index(GetUserNotificationsRequest $request)
     {
+        Log::info('notifications index');
         $user = Auth::user();
         if (!$user) {
             return $this->errorResponse('User is not authorized');
