@@ -39,6 +39,7 @@ class AuthController extends Controller
      *     @OA\Parameter(name="category_ids",description="Array of type ids in json",required=false,in="query",@OA\Schema(type="json")),
      *     @OA\Parameter(name="amount",description="Amount. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Parameter(name="currency",description="Currency. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="country",description="Current country",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.auth.response"))
      * )
@@ -63,6 +64,7 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'job' => $request->job,
             'password' => Hash::make($request->password),
+            'country' => $request->country,
         ]);
 
         if ($request->file('photo')) {
@@ -102,6 +104,7 @@ class AuthController extends Controller
      *     @OA\Parameter(name="email",description="User email",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="phone",description="[OR] User phone number",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="password",description="User password",required=true,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="country",description="Current country",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.auth.response"))
      * )
@@ -120,6 +123,7 @@ class AuthController extends Controller
         if ($user) {
             $token = 'Bearer ' . $user->createToken('authToken')->accessToken;
             $response = ['user' => (new UserResource($user)), 'token' => $token];
+            $user->update(['country' => $request->country]);
             Log::info("Login: ", $user->toArray());
             return $this->successResponse($response);
         }

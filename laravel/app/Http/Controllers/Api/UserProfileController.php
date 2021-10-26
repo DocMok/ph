@@ -66,6 +66,7 @@ class UserProfileController extends Controller
      *     @OA\Parameter(name="phone",description="User's phone number",required=false,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="amount",description="Investor's balance. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Parameter(name="currency",description="Currency. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="country",description="Current country",required=true,in="query",@OA\Schema(type="string")),
      *     @OA\Parameter(name="category_ids",description="Investor's prefered category ids. Required when user_type=Investor",required=false,in="query",@OA\Schema(type="array", @OA\Items(type="integer"))),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.profile.response")),
