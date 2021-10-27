@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(partnerhub.info)
+domains=(lynkhub.net)
 rsa_key_size=4096
 data_path="./containers/certbot"
 email="amroisu@gmail.com" # Adding a valid address is strongly recommended
