@@ -152,6 +152,7 @@ class ProjectController extends Controller
             'description' => $request->description,
             'category_id' => $request->category_id,
             'currency' => $request->currency,
+            'country' => $user->country,
             'amount_available' => $request->amount_available,
             'amount_remaining' => $request->amount_remaining,
             'product_or_service_description' => $request->product_or_service_description ?? null,

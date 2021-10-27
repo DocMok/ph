@@ -33,7 +33,9 @@ class Investor extends Model
 
     public function scopeFilter($query, $request, User $user)
     {
-        return $query->when($request->category_ids, function ($query) use ($request) {
+        return $query->whereHas('user', function($query) use ($user) {
+            $query->where('country', $user->country);
+        })->when($request->category_ids, function ($query) use ($request) {
             $query->whereHas('categories', function ($query) use ($request) {
                 $query->whereIn('category_id', json_decode($request->category_ids));
             });

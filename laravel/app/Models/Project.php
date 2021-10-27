@@ -44,9 +44,10 @@ class Project extends Model
 
     public function scopeFilter($query, $request, User $user)
     {
-        return $query->when($request->category_ids, function ($query) use ($request) {
-            $query->whereIn('category_id', json_decode($request->category_ids));
-        })
+        return $query->where('country', $user->country)
+            ->when($request->category_ids, function ($query) use ($request) {
+                $query->whereIn('category_id', json_decode($request->category_ids));
+            })
             ->when(!$request->category_ids && $user->user_type == User::INVESTOR, function ($query) use ($user) {
                 $query->whereIn('category_id', $user->typeable->categories->keyBy('id')->keys());
             })
