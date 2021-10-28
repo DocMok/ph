@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\DeleteProjectRequest;
 use App\Http\Requests\Api\GetProjectsRequest;
 use App\Http\Requests\Api\LikedProjectsRequest;
 use App\Http\Requests\Api\ProjectStoreRequest;
@@ -300,5 +301,40 @@ class ProjectController extends Controller
             'projects' => ProjectResource::collection($projects),
         ];
         return $this->successResponse($response);
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/project",
+     *     description="Delete project",
+     *     tags={"Projects"},
+     *     @OA\Parameter(name="id",description="Project id",required=true,in="query",@OA\Schema(type="integer")),
+     *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/store.update.project.response")),
+     *     security={{"Authorization": {}}}
+     * )
+     */
+    public function destroy(DeleteProjectRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User is not authorized');
+        }
+        if ($user->user_type == User::INVESTOR) {
+            return $this->errorResponse('Wrong user type');
+        }
+
+        $project = Project::find($request->id);
+
+        if ($project->project_owner_id != $user->typeable->id) {
+            return $this->errorResponse('You\'re not the owner of this project');
+        }
+
+        if ($project->logo) {
+            Storage::disk('public')->delete($project->logo);
+        }
+        $project->delete();
+
+        return $this->successResponse('ok');
     }
 }

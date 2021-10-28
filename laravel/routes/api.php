@@ -59,5 +59,6 @@ Route::prefix('project')->middleware('auth:api')->group(function () {
     Route::post('like-toggle', [ProjectController::class, 'likeToggle']);
     Route::get('/', [ProjectController::class, 'show']);
     Route::post('/', [ProjectController::class, 'store']);
+    Route::delete('/', [ProjectController::class, 'destroy']);
     Route::post('/update', [ProjectController::class, 'update']);
 });
