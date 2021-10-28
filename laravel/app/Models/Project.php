@@ -37,8 +37,8 @@ class Project extends Model
             $query->whereIn('category_id', $user->typeable->categories->keyBy('id')->keys());
         })
             ->when($user->user_type == User::PROJECT_OWNER, function ($query) use ($user) {
-                $lastProject = $user->typeable->projects()->orderBy('created_at', 'desc')->first();
-                $lastProject ? $query->where('category_id', $lastProject->category_id) : $query;
+                $projectCategories = $user->typeable->projects->keyBy('category_id')->keys();
+                $projectCategories ? $query->whereIn('category_id', $projectCategories) : $query;
             });
     }
 
