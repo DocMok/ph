@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GetUserProfileRequest;
 use App\Http\Requests\Api\UpdateUserProfileRequest;
+use App\Http\Resources\ForeignUserProfileResource;
 use App\Http\Resources\UserProfileResource;
 use App\Http\Traits\ApiResponsable;
 use App\Models\User;
@@ -20,7 +21,7 @@ class UserProfileController extends Controller
      *     path="/api/user/profile",
      *     description="Get user profile. !!!ATTENTION!!! Response may has different structure (see in schemas: project.owner.profile.response, investor.profile.response)",
      *     tags={"User profile"},
-     *     @OA\Parameter(name="id",description="User id",required=false,in="query",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="id",description="User id. When value present response may has structure as in schemas:  foreign.project.owner.profile.response, foreign.investor.profile.response",required=false,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/user.profile.response")),
      *     security={{"Authorization": {}}}
@@ -33,7 +34,9 @@ class UserProfileController extends Controller
      *   @OA\Property(property="errors_message",type="string",example=null),
      *   @OA\Property(property="data",type="object",oneOf={
      *      @OA\Schema(ref="#/components/schemas/project.owner.profile.response"),
-     *      @OA\Schema(ref="#/components/schemas/investor.profile.response")},
+     *      @OA\Schema(ref="#/components/schemas/investor.profile.response"),
+     *      @OA\Schema(ref="#/components/schemas/foreign.project.owner.profile.response"),
+     *      @OA\Schema(ref="#/components/schemas/foreign.investor.profile.response")},
      *   ),
      * )
      */
@@ -43,7 +46,10 @@ class UserProfileController extends Controller
         if (!$user) {
             return $this->errorResponse('User is not authorized');
         }
-        !$request->id ?: $user = User::find($request->id);
+        if ($request->id) {
+            $user = User::find($request->id);
+            return $this->successResponse(new ForeignUserProfileResource($user));
+        }
         return $this->successResponse(new UserProfileResource($user));
     }
 
