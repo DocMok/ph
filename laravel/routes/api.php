@@ -24,6 +24,7 @@ Route::prefix('user')->group(function () {
         Route::prefix('notifications')->group(function () {
             Route::get('/', [UserNotificationController::class, 'index']);
             Route::put('/', [UserNotificationController::class, 'update']);
+            Route::get('not-viewed', [UserNotificationController::class, 'countNotViewed']);
         });
         Route::get('suggestions', [UserSuggestionsController::class, 'index']);
         Route::prefix('fcm-tokens')->group(function () {

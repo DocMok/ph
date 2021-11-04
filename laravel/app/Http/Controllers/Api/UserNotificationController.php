@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\GetCountNotViewedNotificationsRequest;
 use App\Http\Requests\Api\GetUserNotificationsRequest;
 use App\Http\Requests\Api\UpdateNotificationsRequest;
 use App\Http\Resources\NoticeResource;
 use App\Http\Traits\ApiResponsable;
 use App\Models\Notice;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -101,5 +103,27 @@ class UserNotificationController extends Controller
         return count($notificationIds) == $updatedCount
             ? $this->successResponse('ok')
             : $this->errorResponse('Some notifications have not been updated');
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/user/notifications/not-viewed",
+     *     description="Get user count of not viewed notifications by id",
+     *     tags={"Notifications"},
+     *     @OA\Parameter(name="id",description="User id",required=true,in="query",@OA\Schema(type="integer")),
+     *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/update.notifications.response")),
+     *     security={{"Authorization": {}}}
+     * )
+     */
+    public function countNotViewed(GetCountNotViewedNotificationsRequest $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $this->errorResponse('User is not authorized');
+        }
+        $user = User::find($request->id);
+        $total = $user->notices()->where('is_viewed', false)->count();
+        return $this->successResponse(compact('total'));
     }
 }
