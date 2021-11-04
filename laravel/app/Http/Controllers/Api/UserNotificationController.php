@@ -112,8 +112,17 @@ class UserNotificationController extends Controller
      *     tags={"Notifications"},
      *     @OA\Parameter(name="id",description="User id",required=true,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
-     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/update.notifications.response")),
+     *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/get.not-viewed.notifications.count.response")),
      *     security={{"Authorization": {}}}
+     * )
+     */
+    /**
+     * @OA\Schema(schema="get.not-viewed.notifications.count.response",
+     *   @OA\Property(property="success",type="boolean",example=true),
+     *   @OA\Property(property="errors_message",type="string",example=null),
+     *   @OA\Property(property="data",type="object",
+     *      @OA\Property(property="total", type="integer", example=5),
+     *   ),
      * )
      */
     public function countNotViewed(GetCountNotViewedNotificationsRequest $request)
