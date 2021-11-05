@@ -27,7 +27,8 @@ class ProjectLikeRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|exists:projects,id'
+            'id' => 'required|exists:projects,id',
+            'unread_messages' => 'required|integer|min:0'
         ];
     }
 }

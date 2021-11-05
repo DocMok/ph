@@ -107,6 +107,7 @@ class InvestorController extends Controller
      *     description="Like investor",
      *     tags={"Investors"},
      *     @OA\Parameter(name="id",description="User id",required=true,in="query",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="unread_messages",description="User unread messages count. Min: 0.",required=true,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/like.toggle.response")),
      *     security={{"Authorization": {}}}
@@ -124,6 +125,7 @@ class InvestorController extends Controller
             return $this->errorResponse('User is not investor');
         }
 
+        $investorUser->update(['unread_messages' => $request->unread_messages]);
         $investor = Investor::find($investorUser->typeable->id);
         $toggleResult = $investor->likes()->toggle($user->id);
 

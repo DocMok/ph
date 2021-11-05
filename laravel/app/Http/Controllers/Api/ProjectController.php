@@ -232,6 +232,7 @@ class ProjectController extends Controller
      *     description="Like project",
      *     tags={"Projects"},
      *     @OA\Parameter(name="id",description="Project id",required=true,in="query",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="unread_messages",description="Project owner's unread messages count. Min: 0.",required=true,in="query",@OA\Schema(type="integer")),
      *     @OA\Response(response=400,description="error",@OA\JsonContent(ref="#/components/schemas/errorResponse")),
      *     @OA\Response(response=200,description="ok",@OA\JsonContent(ref="#/components/schemas/like.toggle.response")),
      *     security={{"Authorization": {}}}
@@ -256,6 +257,9 @@ class ProjectController extends Controller
 
         $project = Project::find($request->id);
         $toggleResult = $project->likes()->toggle($user->id);
+
+        $projectOwnerUser = $project->projectOwner->user;
+        $projectOwnerUser->update(['unread_messages' => $request->unread_messages]);
 
         if (!empty($toggleResult['attached'])) {
             $title = 'PartnerHub notification';

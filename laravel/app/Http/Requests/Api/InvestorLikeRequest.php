@@ -27,6 +27,7 @@ class InvestorLikeRequest extends FormRequest
     {
         return [
             'id' => 'required|exists:users,id',
+            'unread_messages' => 'required|integer|min:0',
         ];
     }
 }

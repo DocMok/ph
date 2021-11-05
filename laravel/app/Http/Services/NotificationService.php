@@ -38,7 +38,8 @@ class NotificationService
                 ->withData([
                     'event' => 'new_like',
                     'title' => $title,
-                    'body' => $body
+                    'body' => $body,
+                    'badge' => $toUser->unread_messages + $toUser->notices()->where('is_viewed', false)->count(),
                 ]);
             $report = app('firebase.messaging')->sendMulticast($notification, $tokens);
 
