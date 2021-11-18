@@ -34,7 +34,8 @@ class Project extends Model
 
     public function scopeSuggestions($query, User $user)
     {
-        return $query->when($user->user_type == User::INVESTOR, function ($query) use ($user) {
+        return $query->where('country', $user->country)
+            ->when($user->user_type == User::INVESTOR, function ($query) use ($user) {
             $query->whereIn('category_id', $user->typeable->categories->keyBy('id')->keys());
         })
             ->when($user->user_type == User::PROJECT_OWNER, function ($query) use ($user) {
