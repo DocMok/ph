@@ -19,8 +19,8 @@ Route::prefix('user')->group(function () {
     Route::get('login', [AuthController::class, 'login']);
     Route::middleware('auth:api')->group(function () {
         Route::get('logout', [AuthController::class, 'logout']);
-        Route::post('profile', [UserProfileController::class, 'updateProfile']);
-        Route::get('profile', [UserProfileController::class, 'getProfile']);
+        Route::post('profile', [UserProfileController::class, 'update']);
+        Route::get('profile', [UserProfileController::class, 'show']);
         Route::prefix('notifications')->group(function () {
             Route::get('/', [UserNotificationController::class, 'index']);
             Route::put('/', [UserNotificationController::class, 'update']);

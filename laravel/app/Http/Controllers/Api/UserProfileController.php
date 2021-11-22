@@ -40,7 +40,7 @@ class UserProfileController extends Controller
      *   ),
      * )
      */
-    public function getProfile(GetUserProfileRequest $request)
+    public function show(GetUserProfileRequest $request)
     {
         $user = Auth::user();
         if (!$user) {
@@ -80,7 +80,7 @@ class UserProfileController extends Controller
      * )
      */
 
-    public function updateProfile(UpdateUserProfileRequest $request)
+    public function update(UpdateUserProfileRequest $request)
     {
         $user = Auth::user();
         if (!$user) {
@@ -98,8 +98,10 @@ class UserProfileController extends Controller
 
         $user->update($request->except('amount', 'currency', 'category_ids', 'photo'));
         if ($user->user_type == User::INVESTOR) {
-            $user->typeable->update($request->only('amount', 'currency'));
-            $user->typeable->categories()->sync($request->category_ids);
+            !$request->amount ?: $user->typeable->amount = $request->amount;
+            !$request->currency ?: $user->typeable->currency = $request->currency;
+            $user->save();
+            !$request->category_ids ?: $user->typeable->categories()->sync($request->category_ids);
         }
         return $this->successResponse(new UserProfileResource($user));
     }
