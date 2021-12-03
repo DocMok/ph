@@ -15,27 +15,27 @@ class CategorySeeder extends Seeder
     public function run()
     {
         $categories = [
-            'Agriculture' => '‫الزراعه‬',
-            'Medical' => '‫الطب‬',
-            'Electronics' => '‫إلكترونيات‬',
-            'Technology' => '‫تكنولوجيا‬',
-            'Automobile' => '‫سيارات‬',
-            'Manufacturing' => '‫الصناعه‬',
-            'Clothing' => '‫مالبس‬',
-            'Real estate' => '‫عقارات‬',
-            'Construction' => '‫بناء‬',
-            'Beauty' => '‫تجميل‬',
-            'Engineering' => '‫الهندسات‬',
-            'Trade' => '‫تجاره‬',
-            'Restaurants/Cafes' => '‫ومقاهي‬ ‫مطاعم‬',
-            'Education' => '‫تعليم‬',
-            'Ecommerce' => '‫تجاره‬ ‫الكترونيه‬',
-            'Retail' => '‫متاجر‬',
-            'Startup' => '‫أب‬ ‫ستارت‬'
+            'Agriculture' => 'الزراعه',
+            'Medical' => 'الطب',
+            'Electronics' => 'إلكترونيات',
+            'Technology' => 'تكنولوجيا',
+            'Automobile' => 'سيارات',
+            'Manufacturing' => 'الصناعه',
+            'Clothing' => 'الملابس',
+            'Real estate' => 'عقارات',
+            'Construction' => 'بناء',
+            'Beauty' => 'تجميل',
+            'Engineering' => 'الهندسات',
+            'Trade' => 'تجاره',
+            'Restaurants/Cafes' => 'المطاعم و المقاهي',
+            'Education' => 'تعليم',
+            'Ecommerce' => 'تجاره الكترونيه',
+            'Retail' => 'متاجر',
+            'Startup' => 'ستارت أب'
         ];
 
         foreach ($categories as $en => $arab) {
-            Category::create(['en' => $en, 'arab' => $arab]);
+            Category::updateOrCreate(['en' => $en], ['en' => $en, 'arab' => $arab]);
         }
     }
 }
