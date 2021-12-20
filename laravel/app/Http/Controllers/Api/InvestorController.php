@@ -166,7 +166,7 @@ class InvestorController extends Controller
 
         $investorsQuery = $user->likedInvestors();
         $investorsTotal = $investorsQuery->count();
-        $investors = $investorsQuery->limit($limit)->skip($skip)->get();
+        $investors = $investorsQuery->orderBy('created_at', 'desc')->limit($limit)->skip($skip)->get();
 
         $response = [
             'pages_total' => (int)ceil($investorsTotal / $limit),
