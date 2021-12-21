@@ -298,7 +298,7 @@ class ProjectController extends Controller
 
         $projectsQuery = $user->likedProjects();
         $projectsTotal = $projectsQuery->count();
-        $projects = $projectsQuery->orderBy('created_at', 'desc')->limit($limit)->skip($skip)->get();
+        $projects = $projectsQuery->limit($limit)->skip($skip)->get();
 
         $response = [
             'pages_total' => (int)ceil($projectsTotal / $limit),

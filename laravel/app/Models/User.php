@@ -58,12 +58,14 @@ class User extends Authenticatable
 
     public function likedProjects()
     {
-        return $this->belongsToMany(Project::class, 'project_user_likes');
+        return $this->belongsToMany(Project::class, 'project_user_likes')
+            ->withTimestamps()->orderByPivot('created_at', 'desc');
     }
 
     public function likedInvestors()
     {
-        return $this->belongsToMany(Investor::class, 'investor_user_likes');
+        return $this->belongsToMany(Investor::class, 'investor_user_likes')
+            ->withTimestamps()->orderByPivot('created_at', 'desc');
     }
 
     public function notificationTokens()
