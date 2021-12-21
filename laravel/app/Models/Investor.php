@@ -23,7 +23,8 @@ class Investor extends Model
 
     public function likes()
     {
-        return $this->belongsToMany(User::class, 'investor_user_likes');
+        return $this->belongsToMany(User::class, 'investor_user_likes')
+            ->withTimestamps()->orderByPivot('created_at', 'desc');
     }
 
     public function notices()
@@ -33,7 +34,7 @@ class Investor extends Model
 
     public function scopeFilter($query, $request, User $user)
     {
-        return $query->whereHas('user', function($query) use ($user) {
+        return $query->whereHas('user', function ($query) use ($user) {
             $query->where('country', $user->country);
         })->when($request->category_ids, function ($query) use ($request) {
             $query->whereHas('categories', function ($query) use ($request) {

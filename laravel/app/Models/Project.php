@@ -24,7 +24,8 @@ class Project extends Model
 
     public function likes()
     {
-        return $this->belongsToMany(User::class, 'project_user_likes');
+        return $this->belongsToMany(User::class, 'project_user_likes')
+            ->withTimestamps()->orderByPivot('created_at', 'desc');
     }
 
     public function notices()
