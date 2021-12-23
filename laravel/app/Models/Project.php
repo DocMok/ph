@@ -43,7 +43,7 @@ class Project extends Model
                 $projectCategories = $user->typeable->projects->keyBy('category_id')->keys();
                 $projectCategories ? $query->whereIn('category_id', $projectCategories) : $query;
             })
-            ->sortBy('id', 'desc');
+            ->orderBy('id', 'desc');
     }
 
     public function scopeFilter($query, $request, User $user)
