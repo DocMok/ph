@@ -42,7 +42,8 @@ class Project extends Model
             ->when($user->user_type == User::PROJECT_OWNER, function ($query) use ($user) {
                 $projectCategories = $user->typeable->projects->keyBy('category_id')->keys();
                 $projectCategories ? $query->whereIn('category_id', $projectCategories) : $query;
-            });
+            })
+            ->sortBy('id', 'desc');
     }
 
     public function scopeFilter($query, $request, User $user)
