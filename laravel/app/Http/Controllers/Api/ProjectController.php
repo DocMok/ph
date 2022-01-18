@@ -262,7 +262,7 @@ class ProjectController extends Controller
         $projectOwnerUser->update(['unread_messages' => $request->unread_messages]);
 
         if (!empty($toggleResult['attached'])) {
-            $title = 'PartnerHub notification';
+            $title = env('APP_NAME') . ' notification';
             $body = 'Somebody liked your project ' . $project->name . ' recently';
 
             $NS->notificate($user, $project->projectOwner->user, $project, $title, $body, 'Liked your project');

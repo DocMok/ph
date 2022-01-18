@@ -130,10 +130,10 @@ class InvestorController extends Controller
         $toggleResult = $investor->likes()->toggle($user->id);
 
         if (!empty($toggleResult['attached'])) {
-            $title = 'PartnerHub notification';
-            $body = 'Somebody liked you recently';
+            $title = env('APP_NAME'). ' notification';
+            $body = 'Somebody liked your profile recently';
 
-            $NS->notificate($user, $investorUser, $investor, $title, $body, 'Liked you');
+            $NS->notificate($user, $investorUser, $investor, $title, $body, 'Liked your profile');
         }
 
         $response = ['likes_total' => $investor->likes()->count()];
