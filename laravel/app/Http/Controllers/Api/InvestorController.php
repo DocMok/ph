@@ -130,7 +130,7 @@ class InvestorController extends Controller
         $toggleResult = $investor->likes()->toggle($user->id);
 
         if (!empty($toggleResult['attached'])) {
-            $title = env('APP_NAME'). ' notification';
+            $title = config('app.name'). ' notification';
             $body = 'Somebody liked your profile recently';
 
             $NS->notificate($user, $investorUser, $investor, $title, $body, 'Liked your profile');
