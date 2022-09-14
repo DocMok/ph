@@ -11,11 +11,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    const USER_TYPES = [
-        'ProjectOwner' => 0,
-        'Investor' => 1,
-    ];
-
+    const PROJECT_OWNER = 'ProjectOwner';
+    const INVESTOR = 'Investor';
     /**
      * The attributes that are mass assignable.
      *
@@ -49,12 +46,35 @@ class User extends Authenticatable
 
     protected $appends = ['user_type'];
 
-    public function typeable() {
+    public function typeable()
+    {
         return $this->morphTo();
     }
 
-    public function getUserTypeAttribute() {
-        $className = class_basename($this->typeable);
-        return self::USER_TYPES[$className] ?? null;
+    public function getUserTypeAttribute()
+    {
+        return class_basename($this->typeable);
+    }
+
+    public function likedProjects()
+    {
+        return $this->belongsToMany(Project::class, 'project_user_likes')
+            ->withTimestamps()->orderByPivot('created_at', 'desc');
+    }
+
+    public function likedInvestors()
+    {
+        return $this->belongsToMany(Investor::class, 'investor_user_likes')
+            ->withTimestamps()->orderByPivot('created_at', 'desc');
+    }
+
+    public function notificationTokens()
+    {
+        return $this->hasMany(NotificationToken::class);
+    }
+
+    public function notices()
+    {
+        return $this->hasMany(Notice::class, 'to_user_id', 'id');
     }
 }

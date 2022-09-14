@@ -12,4 +12,8 @@ class ProjectOwner extends Model
     public function user() {
         return $this->morphOne(User::class, 'typeable');
     }
+
+    public function projects() {
+        return $this->hasMany(Project::class)->where('country', $this->user->country);
+    }
 }

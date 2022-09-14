@@ -6,14 +6,18 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-fileinfo": "*",
+        "ext-json": "*",
         "darkaonline/l5-swagger": "^8.0",
+        "doctrine/dbal": "^3.1",
         "fruitcake/laravel-cors": "^2.0",
+        "grkamil/laravel-telegram-logging": "^1.5",
         "guzzlehttp/guzzle": "^7.0.1",
+        "kreait/laravel-firebase": "^3.1",
         "laravel/framework": "^8.54",
         "laravel/passport": "^10.1",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5",
-      "ext-json": "*"
+        "laravel/tinker": "^2.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

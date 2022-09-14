@@ -27,11 +27,16 @@ class SignupRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'email|unique:users,email',
             'job' => 'required|string',
             'phone' => 'required|numeric|unique:users,phone',
             'password' => 'required|string',
-            'user_type' => 'required|numeric|min:0|max:1',
+            'user_type' => 'required|string|in:Investor,ProjectOwner',
+            'category_ids' => 'required_if:user_type,Investor|json',
+            'amount' => 'required_if:user_type,Investor|integer|min:0',
+            'currency' => 'required_if:user_type,Investor|string',
+            'photo' => 'mimes:jpg,png|max:1024',
+            'country' => 'required|string',
         ];
     }
 }

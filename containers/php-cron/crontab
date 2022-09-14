@@ -1,3 +1,0 @@
-* * * * *  /usr/local/bin/php /var/www/html/artisan schedule:run >> /var/log/cron.log 2>&1
-* * * * *  echo "hello" >> /var/log/cron.log 2>&1
-# An empty line is required at the end a cron file.

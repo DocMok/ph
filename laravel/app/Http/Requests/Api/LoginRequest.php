@@ -29,6 +29,7 @@ class LoginRequest extends FormRequest
             'email' => 'email|exists:users',
             'phone' => 'numeric|required_without:email|exists:users',
             'password' => 'required|string',
+            'country' => 'required|string',
         ];
     }
 }
