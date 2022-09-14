@@ -10,4 +10,9 @@ class NotificationToken extends Model
     use HasFactory;
 
     protected $guarded = [];
+//    protected $appends = ['test'];
+
+    public function getTestAttribute() {
+        return 'test';
+    }
 }
